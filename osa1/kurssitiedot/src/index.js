@@ -9,50 +9,41 @@ const Part = ({ name, exercises }) => (
   <p>{name} {exercises}</p>
 )
 
-const Content = ({ 
-  part1,
-  part2,
-  part3
-}) => (
+const Content = ({parts}) => (
   <>
-    <Part {...part1} />
-    <Part {...part2} />
-    <Part {...part3} />
+    {parts.map(part => (<Part key={part.name} {...part} />))}
   </>
 )
 
-const Total = ({ part1, part2, part3 }) => (
-  <p>yhteensä {part1.exercises + part2.exercises + part3.exercises} tehtävää</p>
-)
+const Total = ({parts}) => {
+  const count = parts.reduce((sum, part) => sum + part.exercises, 0)
+  return (
+    <p>yhteensä {count} tehtävää</p>
+  )
+}
 
 const App = () => {
   const course = 'Half Stack -sovelluskehitys'
-  const part1 = {
-    name: 'Reactin perusteet',
-    exercises: 10
-  }
-  const part2 = {
-    name: 'Tiedonvälitys propseilla',
-    exercises: 7
-  }
-  const part3 = {
-    name: 'Komponenttien tila',
-    exercises: 14
-  }
+  const parts = [
+    {
+      name: 'Reactin perusteet',
+      exercises: 10
+    },
+    {
+      name: 'Tiedonvälitys propseilla',
+      exercises: 7
+    },
+    {
+      name: 'Komponenttien tila',
+      exercises: 14
+    }
+  ]
 
   return (
     <div>
       <Header course={course} />
-      <Content
-        part1={part1}
-        part2={part2}
-        part3={part3}
-      />
-      <Total
-        part1={part1}
-        part2={part2}
-        part3={part3}
-      />
+      <Content parts={parts} />
+      <Total parts={parts} />
     </div>
   )
 }
