@@ -5,6 +5,10 @@ const Button = ({ label, handleClick }) => (
   <button onClick={handleClick}>{label}</button>
 )
 
+const Statistic = ({ text, value }) => (
+  <>{text} {value}<br/></>
+)
+
 const Statistics = ({ good, neutral, bad }) => {
   const total = good + neutral + bad
   const average = (good - bad) / total || 0
@@ -17,14 +21,14 @@ const Statistics = ({ good, neutral, bad }) => {
   }
 
   return (
-    <p>
-      hyvä {good}<br/>
-      neutraali {neutral}<br/>
-      huono {bad}<br/>
-      yhteensä {total}<br/>
-      keskiarvo {average}<br/>
-      positiivisia {positive} %
-    </p>
+    <div>
+      <Statistic text="hyvä" value={good} />
+      <Statistic text="neutraali" value={neutral} />
+      <Statistic text="huono" value={bad} />
+      <Statistic text="yhteensä" value={total} />
+      <Statistic text="keskiarvo" value={average} />
+      <Statistic text="positiivisia" value={positive + ' %'} />
+    </div>
   )
 }
 
