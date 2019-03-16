@@ -5,6 +5,10 @@ const Header = ({ course }) => (
   <h1>{course}</h1>
 )
 
+const Part = ({ title, exercises }) => (
+  <p>{title} {exercises}</p>
+)
+
 const Content = ({ 
   exercises1,
   exercises2,
@@ -14,15 +18,9 @@ const Content = ({
   part3
 }) => (
   <>
-    <p>
-      {part1} {exercises1}
-    </p>
-    <p>
-      {part2} {exercises2}
-    </p>
-    <p>
-      {part3} {exercises3}
-    </p>
+    <Part title={part1} exercises={exercises1} />
+    <Part title={part2} exercises={exercises2} />
+    <Part title={part3} exercises={exercises3} />
   </>
 )
 
