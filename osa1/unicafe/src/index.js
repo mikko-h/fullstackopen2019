@@ -10,6 +10,12 @@ const Statistics = ({ good, neutral, bad }) => {
   const average = (good - bad) / total || 0
   const positive = (good / total || 0) * 100
 
+  if (total === 0) {
+    return (
+      <p>Ei yhtään palautetta annettu</p>
+    )
+  }
+
   return (
     <p>
       hyvä {good}<br/>
