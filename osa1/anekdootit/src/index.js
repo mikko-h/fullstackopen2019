@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Anecdote = ({ anecdote, votes }) => (
+  <div>
+    {anecdote}
+    <br/>
+    has {votes} votes
+  </div>
+)
+
 const Button = ({ handleClick, label }) => (
   <button onClick={handleClick}>{label}</button>
 )
@@ -26,12 +34,17 @@ const App = (props) => {
     selected: Math.floor(Math.random() * anecdotes.length)
   })
 
+  const largestVoteCount = state.votes.reduce((a, b) => Math.max(a, b))
+  const mostVotesIndex = state.votes.findIndex(votes => votes === largestVoteCount)
+
   return (
     <div>
-      {props.anecdotes[state.selected]}<br/>
-      has {state.votes[state.selected]} votes<br/>
+      <h1>Anecdote of the day</h1>
+      <Anecdote anecdote={props.anecdotes[state.selected]} votes={state.votes[state.selected]} />
       <Button label="vote" handleClick={handleVote} />
       <Button label="next anecdote" handleClick={selectRandom} />
+      <h1>Anecdote with most votes</h1>
+      <Anecdote anecdote={props.anecdotes[mostVotesIndex]} votes={state.votes[mostVotesIndex]} />
     </div>
   )
 }
