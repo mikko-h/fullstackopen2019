@@ -1,8 +1,39 @@
 import React, { useState } from 'react'
 
+const Filter = ({handleChange}) => (
+  <div>
+    rajaa näytettäviä <input onChange={handleChange} />
+  </div>
+)
+
+const PersonForm = ({
+  handleNameChange,
+  handleNumberChange,
+  handleSubmit,
+  newName,
+  newNumber
+}) => (
+  <form onSubmit={handleSubmit}>
+    <div>
+      nimi: <input value={newName} onChange={handleNameChange} />
+    </div>
+    <div>
+      numero: <input value={newNumber} onChange={handleNumberChange} />
+    </div>
+    <div>
+      <button type="submit">lisää</button>
+    </div>
+  </form>
+)
+
 const Person = ({name, number}) => (
   <div>{name} {number}</div>
 )
+
+const Persons = ({persons, filter}) =>
+  persons
+    .filter(filter)
+    .map(person => (<Person key={person.name} {...person} />))
 
 const App = () => {
   const [ persons, setPersons] = useState([
@@ -15,11 +46,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
-  const handleFilterChange = event => setNameFilter(event.target.value)
-
-  const handleNameChange = event => setNewName(event.target.value)
-
-  const handleNumberChange = event => setNewNumber(event.target.value)
+  const handleChange = setState => event => setState(event.target.value)
 
   const personExists = person => persons.findIndex(p => p.name === person.name) > -1
 
@@ -42,25 +69,17 @@ const App = () => {
   return (
     <div>
       <h1>Puhelinluettelo</h1>
-      <div>
-        rajaa näytettäviä <input onChange={handleFilterChange} />
-      </div>
+      <Filter handleChange={handleChange(setNameFilter)} />
       <h2>Lisää uusi</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          nimi: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          numero: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">lisää</button>
-        </div>
-      </form>
+      <PersonForm
+        handleNameChange={handleChange(setNewName)}
+        handleNumberChange={handleChange(setNewNumber)}
+        handleSubmit={addPerson}
+        newName={newName}
+        newNumber={newNumber}
+      />
       <h2>Numerot</h2>
-      {persons
-        .filter(personFilter)
-        .map(person => (<Person key={person.name} {...person} />))}
+      <Persons persons={persons} filter={personFilter} />
     </div>
   )
 
