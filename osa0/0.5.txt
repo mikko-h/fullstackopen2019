@@ -1,0 +1,50 @@
+title Single page app
+
+note over selain
+Käyttäjä kirjoittaa osoiteriville
+fullstack-exampleapp.herokuapp.com/spa
+end note
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/spa
+
+note over palvelin:
+Palauttaa HTML-sivurungon
+end note
+
+palvelin->selain: status 200, sivun HTML-koodi
+
+note over selain:
+Selain huomaa, että HTML-koodissa on 
+viittaukset tyylitiedostoon ja Javascript-
+koodiin ja tekee niiden latauspyynnöt.
+end note
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.css
+
+palvelin->selain: status 200, tyylitiedosto
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/spa.js
+
+palvelin->selain: status 200, sovelluslogiikka
+
+note over selain:
+Selain näyttää palvelimen palauttaman 
+HTML:n, muotoilee sivun ulkoasun tyylisivun 
+mukaisesti ja suorittaa Javascript-koodin 
+sisältämän sovelluslogiikan.
+end note
+
+note over selain
+Javascript-koodi ohjeistaa selainta 
+lataamaan muistiinpanolistan raakadatan
+JSON-muodossa.
+end note
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/data.json
+
+palvelin->selain: status 200, listan raakadata JSON
+
+note over selain:
+Selain esittää muistiinpanolistan 
+sisällön käyttäjälle HTML-listana.
+end note

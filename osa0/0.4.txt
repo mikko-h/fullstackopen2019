@@ -1,0 +1,71 @@
+title Uusi muistiinpano
+
+note over selain
+Käyttäjä kirjoittaa muistiinpanon
+tekstikenttään selaimessa 
+ja painaa Talleta-nappia
+end note
+
+selain->palvelin: POST fullstack-exampleapp.herokuapp.com/new_note
+
+note over palvelin:
+Palvelin tallentaa muistiinpanon
+end note
+
+palvelin->selain: status 302, uudelleenohjaus
+
+note over selain:
+Selain pyytää HTML-sivurunkoa uudelleen
+end note
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/notes
+
+note over palvelin:
+Palvelin huomaa, että selain pyytää samaa
+sivurunkoa, jonka se on jo aiemmin ladannut.
+end note
+
+palvelin->selain: status 304, sisältö ei muuttunut
+
+note over selain:
+Selain lukee HTML-koodin välimuististaan ja
+alkaa käsitellä sitä. Koodissa on viittaus
+Javascript-tiedostoon, jota selain pyytää 
+palvelimelta.
+end note
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/main.js
+
+note over palvelin:
+Palvelin huomeaa, että selain pyytää samaa
+Javascript-tiedostoa, jonka se on jo aiemmin
+ladannut.
+end note
+
+palvelin->selain: status 304, sisältö ei muuttunut
+
+note over selain:
+Selain lukee Javascript-tiedoston
+välimuististaan ja alkaa suorittaa sitä.
+end note
+
+note over selain
+Javascript-koodi ohjeistaa selainta
+lataamaan muistiinpanolistan raakadatan
+JSON-muodossa.
+end note
+
+selain->palvelin: GET fullstack-exampleapp.herokuapp.com/data.json
+
+note over palvelin:
+Palvelin muodostaa uuden 
+muistiinpanolistan, joka sisältää 
+käyttäjän tallentaman muistiinpanon.
+end note
+
+palvelin->selain: status 200, listan raakadata JSON
+
+note over selain:
+Selain esittää muistiinpanolistan 
+sisällön käyttäjälle HTML-listana.
+end note

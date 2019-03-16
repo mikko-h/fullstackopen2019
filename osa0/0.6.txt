@@ -1,0 +1,20 @@
+title Uusi muistiinpano, SPA
+
+note over selain
+Käyttäjä kirjoittaa muistiinpanon
+tekstikenttään selaimessa 
+ja painaa Talleta-nappia
+end note
+
+selain->palvelin: POST fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over palvelin:
+Palvelin tallentaa muistiinpanon
+end note
+
+palvelin->selain: status 201, kuittaus luomisesta
+
+note over selain:
+Selaimen Javascript-koodi lisää 
+muistiinpanon näkyville listaan.
+end note
