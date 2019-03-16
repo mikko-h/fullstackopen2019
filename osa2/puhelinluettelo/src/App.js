@@ -12,10 +12,17 @@ const App = () => {
 
   const handleNameChange = event => setNewName(event.target.value)
 
+  const personExists = person => persons.findIndex(p => p.name === person.name) > -1
+
   const addPerson = (event) => {
+    const newPerson = { name: newName }
     event.preventDefault()
-    setPersons(persons.concat({ name: newName }))
-    setNewName('')
+    if (personExists(newPerson)) {
+      window.alert(`${newName} on jo luettelossa`)
+    } else {
+      setPersons(persons.concat(newPerson))
+      setNewName('')  
+    }
   }
 
   return (
