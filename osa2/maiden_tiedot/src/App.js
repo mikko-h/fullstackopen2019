@@ -1,34 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Filter = ({handleChange}) => (
+const Filter = ({value, handleChange}) => (
   <div>
-    find countries <input onChange={handleChange} />
+    find countries <input value={value} onChange={handleChange} />
   </div>
 )
 
-const Country = ({country}) => (
+const CountryDetails = ({country}) => (
   <div>
     <h1>{country.name}</h1>
     <div>capital {country.capital}</div>
     <div>population {country.population}</div>
     <h2>languages</h2>
     <ul>
-      {country.languages.map(language => (<li>{language.name}</li>))}
+      {country.languages.map(language => (<li key={language.iso639_2}>{language.name}</li>))}
     </ul>
     <img src={country.flag} alt="flag" width="100" />
   </div>
 )
 
-const Countries = ({countries, filter}) => {
+const CountryListing = ({name, handleShow}) => (
+  <div>{name} <button value={name} onClick={handleShow}>show</button></div>
+)
+
+const Countries = ({countries, filter, handleShow}) => {
   const filteredCountries = countries.filter(filter)
 
   if (filteredCountries.length === 1) {
     return (
-      <Country country={filteredCountries[0]} />
+      <CountryDetails country={filteredCountries[0]} />
     )
   } else if (filteredCountries.length <= 10) {
-    return filteredCountries.map(country => (<div key={country.numericCode}>{country.name}</div>))
+    return filteredCountries.map(country => (
+      <CountryListing key={country.numericCode} name={country.name} handleShow={handleShow} />
+    ))
   }
 
   return (
@@ -52,8 +58,8 @@ const App = () => {
 
   return (
     <div>
-      <Filter handleChange={handleFilterChange} />
-      <Countries countries={countries} filter={countryFilter} />
+      <Filter value={nameFilter} handleChange={handleFilterChange} />
+      <Countries countries={countries} filter={countryFilter} handleShow={handleFilterChange} />
     </div>
   )
 }
