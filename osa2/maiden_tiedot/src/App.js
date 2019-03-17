@@ -7,7 +7,16 @@ const Filter = ({value, handleChange}) => (
   </div>
 )
 
-const CountryDetails = ({country}) => (
+const Weather = ({weather}) => (
+  <div>
+    <h2>Weather in {weather.location.name}</h2>
+    <div><b>temperature:</b> {weather.current.temp_c} Celsius</div>
+    <img src={weather.current.condition.icon} alt={weather.current.condition.text} />
+    <div><b>wind:</b> {weather.current.wind_kph} kph direction {weather.current.wind_dir}</div>
+  </div>
+)
+
+const CountryDetails = ({country, weather}) => (
   <div>
     <h1>{country.name}</h1>
     <div>capital {country.capital}</div>
@@ -17,6 +26,7 @@ const CountryDetails = ({country}) => (
       {country.languages.map(language => (<li key={language.iso639_2}>{language.name}</li>))}
     </ul>
     <img src={country.flag} alt="flag" width="100" />
+    {weather && <Weather weather={weather} />}
   </div>
 )
 
@@ -24,15 +34,11 @@ const CountryListing = ({name, handleShow}) => (
   <div>{name} <button value={name} onClick={handleShow}>show</button></div>
 )
 
-const Countries = ({countries, filter, handleShow}) => {
-  const filteredCountries = countries.filter(filter)
-
-  if (filteredCountries.length === 1) {
-    return (
-      <CountryDetails country={filteredCountries[0]} />
-    )
-  } else if (filteredCountries.length <= 10) {
-    return filteredCountries.map(country => (
+const Countries = ({countries, handleShow}) => {
+  if (countries.length === 1) {
+    return null
+  } else if (countries.length <= 10) {
+    return countries.map(country => (
       <CountryListing key={country.numericCode} name={country.name} handleShow={handleShow} />
     ))
   }
@@ -45,10 +51,15 @@ const Countries = ({countries, filter, handleShow}) => {
 const App = () => {
   const [countries, setCountries] = useState([])
   const [nameFilter, setNameFilter] = useState('')
+  const [weather, setWeather] = useState(null)
 
   const handleFilterChange = event => setNameFilter(event.target.value)
 
   const countryFilter = country => country.name.toLowerCase().indexOf(nameFilter.toLowerCase()) > -1
+
+  const filteredCountries = countries.filter(countryFilter)
+
+  const selectedCountry = filteredCountries.length === 1 ? filteredCountries[0] : undefined
 
   useEffect(() => {
     axios
@@ -56,10 +67,21 @@ const App = () => {
       .then(response => setCountries(response.data))
   }, [])
 
+  useEffect(() => {
+    if (selectedCountry) {
+      axios
+        .get(`https://api.apixu.com/v1/current.json?key=${process.env.REACT_APP_APIXU_API_KEY}&q=${selectedCountry.capital}`)
+        .then(response => setWeather(response.data))
+    } else {
+      setWeather(null)
+    }
+  }, [selectedCountry])
+
   return (
     <div>
       <Filter value={nameFilter} handleChange={handleFilterChange} />
-      <Countries countries={countries} filter={countryFilter} handleShow={handleFilterChange} />
+      <Countries countries={filteredCountries} handleShow={handleFilterChange} />
+      {selectedCountry && <CountryDetails country={selectedCountry} weather={weather} />}
     </div>
   )
 }
