@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import personsService from './services/persons'
+import './index.css'
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  )
+}
 
 const Filter = ({handleChange}) => (
   <div>
@@ -37,14 +50,20 @@ const Persons = ({persons, filter, handleRemove}) =>
     .map(person => (<Person key={person.name} handleRemove={() => handleRemove(person.id)} {...person} />))
 
 const App = () => {
+  const [ message, setMessage ] = useState(null)
   const [ persons, setPersons ] = useState([]) 
   const [ nameFilter, setNameFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
+  const showNotification = (message) => {
+    setMessage(message)
+    setTimeout(() => setMessage(null), 5000)
+  } 
+
   const handleChange = setState => event => setState(event.target.value)
 
-  const handleRemove = id => {
+  const handleRemove = (id) => {
     const personToRemove = persons.find(p => p.id === id)
     const confirmation = window.confirm(`Poistetaanko ${personToRemove.name}?`)
 
@@ -53,6 +72,7 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id))
+          showNotification(`Poistettiin ${personToRemove.name}`)
         })
     }
   }
@@ -80,6 +100,7 @@ const App = () => {
             setPersons(persons.map(p => p.id === person.id ? person : p))
             setNewName('')
             setNewNumber('')
+            showNotification(`Muutettiin henkilön ${person.name} numero`)
           })
       }
     } else {
@@ -88,7 +109,8 @@ const App = () => {
         .then(person => {
           setPersons(persons.concat(person))
           setNewName('')
-          setNewNumber('')    
+          setNewNumber('')
+          showNotification(`Lisättiin ${person.name}`) 
         })
     }
   }
@@ -102,6 +124,7 @@ const App = () => {
   return (
     <div>
       <h1>Puhelinluettelo</h1>
+      <Notification message={message} />
       <Filter handleChange={handleChange(setNameFilter)} />
       <h2>Lisää uusi</h2>
       <PersonForm
