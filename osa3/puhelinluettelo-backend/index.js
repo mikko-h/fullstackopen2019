@@ -5,13 +5,29 @@ let persons = require('./db.json')
 const app = express()
 app.use(bodyParser.json())
 
+const generateId = () => Math.round(Math.random() * 10000)
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body
-  person.id = Math.round(Math.random() * 10000)
+  const body = req.body
+
+  if (body.name === undefined) {
+    return res.status(400).json({error: 'name missing'})
+  } else if (body.number === undefined) {
+    return res.status(400).json({error: 'number missing'})
+  } else if (persons.some(p => p.name === body.name)) {
+    return res.status(400).json({error: 'name must be unique'})
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId()
+  }
+
   persons = persons.concat(person)
   res.json(person)
 })
