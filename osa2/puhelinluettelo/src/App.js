@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personsService from './services/persons'
 
 const Filter = ({handleChange}) => (
   <div>
@@ -37,7 +37,7 @@ const Persons = ({persons, filter}) =>
     .map(person => (<Person key={person.name} {...person} />))
 
 const App = () => {
-  const [ persons, setPersons] = useState([]) 
+  const [ persons, setPersons ] = useState([]) 
   const [ nameFilter, setNameFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
@@ -56,10 +56,10 @@ const App = () => {
     if (personExists(newPerson)) {
       window.alert(`${newName} on jo luettelossa`)
     } else {
-      axios
-        .post('http://localhost:3001/persons', newPerson)
-        .then(response => {
-          setPersons(persons.concat(response.data))
+      personsService
+        .create(newPerson)
+        .then(person => {
+          setPersons(persons.concat(person))
           setNewName('')
           setNewNumber('')    
         })
@@ -67,9 +67,9 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => setPersons(response.data))
+    personsService
+      .getAll()
+      .then(persons => setPersons(persons))
   }, [])
 
   return (
