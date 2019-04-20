@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 let persons = require('./db.json')
@@ -6,6 +7,7 @@ let persons = require('./db.json')
 morgan.token('content', (req, res) => JSON.stringify(req.body))
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan(':method :url :content :status :res[content-length] - :response-time ms'))
 
