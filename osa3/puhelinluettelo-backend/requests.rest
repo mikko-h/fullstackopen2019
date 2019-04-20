@@ -1,24 +1,29 @@
-GET http://localhost:3001/api/persons HTTP/1.1
+@BASE_URL = http://localhost:3001/api
+#@BASE_URL = https://gentle-everglades-54735.herokuapp.com/api
+
+###
+
+GET {{BASE_URL}}/persons HTTP/1.1
 Content-type: application/json
 
 ####
 
-GET http://localhost:3001/api/persons/2 HTTP/1.1
+GET {{BASE_URL}}/persons/2 HTTP/1.1
 Content-type: application/json
 
 ####
 
-GET http://localhost:3001/api/persons/5 HTTP/1.1
+GET {{BASE_URL}}/persons/5 HTTP/1.1
 Content-type: application/json
 
 ####
 
-DELETE http://localhost:3001/api/persons/2 HTTP/1.1
+DELETE {{BASE_URL}}/persons/2 HTTP/1.1
 Content-type: application/json
 
 ####
 
-POST http://localhost:3001/api/persons HTTP/1.1
+POST {{BASE_URL}}/persons HTTP/1.1
 Content-type: application/json
 
 {
@@ -28,7 +33,7 @@ Content-type: application/json
 
 ####
 
-POST http://localhost:3001/api/persons HTTP/1.1
+POST {{BASE_URL}}/persons HTTP/1.1
 Content-type: application/json
 
 {
@@ -37,7 +42,7 @@ Content-type: application/json
 
 ####
 
-POST http://localhost:3001/api/persons HTTP/1.1
+POST {{BASE_URL}}/persons HTTP/1.1
 Content-type: application/json
 
 {

@@ -4,6 +4,7 @@
   "description": "Puhelinluettelo backend",
   "main": "index.js",
   "scripts": {
+    "deploy": "( cd $(git rev-parse --show-toplevel) && git push heroku $(git subtree split --prefix osa3/puhelinluettelo-backend master):master --force )",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon index.js"
