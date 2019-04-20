@@ -27,14 +27,14 @@ const PersonForm = ({
   </form>
 )
 
-const Person = ({name, number}) => (
-  <div>{name} {number}</div>
+const Person = ({name, number, handleRemove}) => (
+  <div>{name} {number} <button onClick={handleRemove}>poista</button></div>
 )
 
-const Persons = ({persons, filter}) =>
+const Persons = ({persons, filter, handleRemove}) =>
   persons
     .filter(filter)
-    .map(person => (<Person key={person.name} {...person} />))
+    .map(person => (<Person key={person.name} handleRemove={() => handleRemove(person.id)} {...person} />))
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
@@ -43,6 +43,19 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
 
   const handleChange = setState => event => setState(event.target.value)
+
+  const handleRemove = id => {
+    const personToRemove = persons.find(p => p.id === id)
+    const confirmation = window.confirm(`Poistetaanko ${personToRemove.name}?`)
+
+    if (confirmation) {
+      personsService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+    }
+  }
 
   const personExists = person => persons.findIndex(p => p.name === person.name) > -1
 
@@ -85,7 +98,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h2>Numerot</h2>
-      <Persons persons={persons} filter={personFilter} />
+      <Persons persons={persons} filter={personFilter} handleRemove={handleRemove} />
     </div>
   )
 
