@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react'
 import personsService from './services/persons'
 import './index.css'
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null
+const TYPE_ERROR = 'error'
+const TYPE_SUCCESS = 'success'
+
+const Notification = ({ message, type }) => {
+  if (message) {
+    return (
+      <div className={type}>
+        {message}
+      </div>
+    )
   }
 
-  return (
-    <div className="notification">
-      {message}
-    </div>
-  )
+  return null
 }
 
 const Filter = ({handleChange}) => (
@@ -50,15 +53,15 @@ const Persons = ({persons, filter, handleRemove}) =>
     .map(person => (<Person key={person.name} handleRemove={() => handleRemove(person.id)} {...person} />))
 
 const App = () => {
-  const [ message, setMessage ] = useState(null)
+  const [ notification, setNotification ] = useState(null)
   const [ persons, setPersons ] = useState([]) 
   const [ nameFilter, setNameFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
 
-  const showNotification = (message) => {
-    setMessage(message)
-    setTimeout(() => setMessage(null), 5000)
+  const showNotification = (message, type = TYPE_SUCCESS) => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification(null), 5000)
   } 
 
   const handleChange = setState => event => setState(event.target.value)
@@ -102,6 +105,12 @@ const App = () => {
             setNewNumber('')
             showNotification(`Muutettiin henkilön ${person.name} numero`)
           })
+          .catch(() => {
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
+            setNewName('')
+            setNewNumber('')
+            showNotification(`${existingPerson.name} on jo poistettu`, TYPE_ERROR)
+          })
       }
     } else {
       personsService
@@ -124,7 +133,7 @@ const App = () => {
   return (
     <div>
       <h1>Puhelinluettelo</h1>
-      <Notification message={message} />
+      <Notification {...notification} />
       <Filter handleChange={handleChange(setNameFilter)} />
       <h2>Lisää uusi</h2>
       <PersonForm
