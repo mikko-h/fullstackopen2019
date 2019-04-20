@@ -57,17 +57,31 @@ const App = () => {
     }
   }
 
-  const personExists = person => persons.findIndex(p => p.name === person.name) > -1
+  const personExists = person => persons.find(p => p.name === person.name)
 
   const personFilter = person => person.name.toLowerCase().indexOf(nameFilter.toLowerCase()) > -1
 
   const addPerson = (event) => {
     const newPerson = { name: newName, number: newNumber }
+    const existingPerson = personExists(newPerson)
 
     event.preventDefault()
 
-    if (personExists(newPerson)) {
-      window.alert(`${newName} on jo luettelossa`)
+    if (existingPerson) {
+      const confirmation = window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)
+      
+      if (confirmation) {
+        personsService
+          .update({
+            ...existingPerson,
+            number: newNumber
+          })
+          .then(person => {
+            setPersons(persons.map(p => p.id === person.id ? person : p))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
     } else {
       personsService
         .create(newPerson)
