@@ -1,9 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 let persons = require('./db.json')
 
 const app = express()
 app.use(bodyParser.json())
+app.use(morgan('tiny'))
 
 const generateId = () => Math.round(Math.random() * 10000)
 
