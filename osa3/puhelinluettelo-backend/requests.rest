@@ -3,6 +3,7 @@
 
 ###
 
+# @name getAll
 GET {{BASE_URL}}/persons HTTP/1.1
 Content-type: application/json
 
@@ -18,7 +19,14 @@ Content-type: application/json
 
 ####
 
-DELETE {{BASE_URL}}/persons/2 HTTP/1.1
+# @name delete
+DELETE {{BASE_URL}}/persons/{{getAll.response.body.0.id}} HTTP/1.1
+Content-type: application/json
+
+####
+
+# @name malformattedDelete
+DELETE {{BASE_URL}}/persons/foobar HTTP/1.1
 Content-type: application/json
 
 ####
