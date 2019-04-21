@@ -14,8 +14,6 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan(':method :url :content :status :res[content-length] - :response-time ms'))
 
-const generateId = () => Math.round(Math.random() * 10000)
-
 app.get('/api/persons', (req, res) => {
   Person
     .find({})
@@ -29,18 +27,18 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({error: 'name missing'})
   } else if (body.number === undefined) {
     return res.status(400).json({error: 'number missing'})
-  } else if (persons.some(p => p.name === body.name)) {
-    return res.status(400).json({error: 'name must be unique'})
+  // } else if (persons.some(p => p.name === body.name)) {
+  //   return res.status(400).json({error: 'name must be unique'})
   }
 
-  const person = {
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: generateId()
-  }
+    number: body.number
+  })
 
-  persons = persons.concat(person)
-  res.json(person)
+  person
+    .save()
+    .then(savedPerson => res.json(savedPerson.toJSON()))
 })
 
 app.get('/api/persons/:id', (req, res) => {
