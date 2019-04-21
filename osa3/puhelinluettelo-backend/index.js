@@ -20,25 +20,17 @@ app.get('/api/persons', (req, res) => {
     .then(persons => res.json(persons.map(person => person.toJSON())))
 })
 
-app.post('/api/persons', (req, res) => {
-  const body = req.body
-
-  if (body.name === undefined) {
-    return res.status(400).json({error: 'name missing'})
-  } else if (body.number === undefined) {
-    return res.status(400).json({error: 'number missing'})
-  // } else if (persons.some(p => p.name === body.name)) {
-  //   return res.status(400).json({error: 'name must be unique'})
-  }
-
+app.post('/api/persons', (req, res, next) => {
+  const { name, number } = req.body
   const person = new Person({
-    name: body.name,
-    number: body.number
+    name,
+    number
   })
 
   person
     .save()
     .then(savedPerson => res.json(savedPerson.toJSON()))
+    .catch(err => next(err))
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -52,19 +44,34 @@ app.get('/api/persons/:id', (req, res) => {
   }
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person
     .findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
-    .catch(err => {
-      console.log(err)
-      res.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(err => next(err))
 })
 
 app.get('/info', (req, res) => {
   res.send(`<p>puhelinluettelossa ${persons.length} henkilön tiedot</p><p>${Date()}</p>`)
-})  
+})
+
+const errorHandler = (err, req, res, next) => {
+  console.error(err.message)
+
+  if (err.name === 'CastError' && err.kind == 'ObjectId') {
+    return res.status(400).send({ error: 'malformatted id' })
+  }
+
+  if (err.name === 'ValidationError') {
+    return res.status(400).send({ error: err.message })
+  }
+
+  next(err)
+}
+app.use(errorHandler)
+
+const unknownEndpoint = (req, res) => res.status(404).send({ error: 'unknown endpoint' })
+app.use(unknownEndpoint)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
