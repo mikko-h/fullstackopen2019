@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const Person = require('./models/person')
+
 let persons = require('./db.json')
 
 morgan.token('content', (req, res) => JSON.stringify(req.body))
@@ -15,7 +17,9 @@ app.use(morgan(':method :url :content :status :res[content-length] - :response-t
 const generateId = () => Math.round(Math.random() * 10000)
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person
+    .find({})
+    .then(persons => res.json(persons.map(person => person.toJSON())))
 })
 
 app.post('/api/persons', (req, res) => {
