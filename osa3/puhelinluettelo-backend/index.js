@@ -4,8 +4,6 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const Person = require('./models/person')
 
-let persons = require('./db.json')
-
 morgan.token('content', (req, res) => JSON.stringify(req.body))
 
 const app = express()
@@ -33,15 +31,11 @@ app.post('/api/persons', (req, res, next) => {
     .catch(err => next(err))
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
+app.get('/api/persons/:id', (req, res, next) => {
+  Person
+    .findById(req.params.id)
+    .then(person => res.json(person.toJSON()))
+    .catch(err => next(err))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
@@ -65,7 +59,9 @@ app.delete('/api/persons/:id', (req, res, next) => {
 })
 
 app.get('/info', (req, res) => {
-  res.send(`<p>puhelinluettelossa ${persons.length} henkilön tiedot</p><p>${Date()}</p>`)
+  Person
+    .find({})
+    .then(persons => res.send(`<p>puhelinluettelossa ${persons.length} henkilön tiedot</p><p>${Date()}</p>`))
 })
 
 const errorHandler = (err, req, res, next) => {
@@ -73,6 +69,10 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'CastError' && err.kind == 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' })
+  }
+
+  if (err.name === 'TypeError') {
+    return res.status(404).end()
   }
 
   if (err.name === 'ValidationError') {

@@ -9,12 +9,14 @@ Content-type: application/json
 
 ####
 
-GET {{BASE_URL}}/persons/2 HTTP/1.1
+# @name get
+GET {{BASE_URL}}/persons/{{getAll.response.body.0.id}} HTTP/1.1
 Content-type: application/json
 
 ####
 
-GET {{BASE_URL}}/persons/5 HTTP/1.1
+# @name invalidGet
+GET {{BASE_URL}}/persons/5b0faeccf8cbde56748b0000 HTTP/1.1
 Content-type: application/json
 
 ####
