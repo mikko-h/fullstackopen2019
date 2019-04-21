@@ -44,6 +44,19 @@ app.get('/api/persons/:id', (req, res) => {
   }
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = req.body
+  const person = {
+    name,
+    number
+  }
+
+  Person
+    .findByIdAndUpdate(req.params.id, person, { new: true})
+    .then(updatedPerson => res.json(updatedPerson.toJSON()))
+    .catch(err => next(err))
+})
+
 app.delete('/api/persons/:id', (req, res, next) => {
   Person
     .findByIdAndRemove(req.params.id)
