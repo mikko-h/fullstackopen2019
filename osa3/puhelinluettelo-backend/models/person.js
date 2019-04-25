@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
-require('dotenv-flow').config()
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv-flow').config()
+}
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
