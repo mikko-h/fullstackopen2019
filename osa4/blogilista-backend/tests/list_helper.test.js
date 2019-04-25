@@ -102,3 +102,26 @@ describe('favorite blog', () => {
     expect(result).toEqual(listWithManyBlogs[2])
   })
 })
+
+describe('author with most blogs', () => {
+  test('of empty list is undefined', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toBeUndefined()
+  })
+
+  test ('of a list containing one blog is author of that blog', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1
+    })
+  })
+
+  test('of a bigger list to be author with largest count of blogs', () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs)
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3
+    })
+  })
+})
