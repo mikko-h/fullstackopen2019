@@ -121,6 +121,9 @@ const App = () => {
           setNewNumber('')
           showNotification(`Lisättiin ${person.name}`) 
         })
+        .catch(err => {
+          showNotification(err.response.data.error, TYPE_ERROR)
+        })
     }
   }
 
