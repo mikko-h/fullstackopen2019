@@ -52,7 +52,7 @@ if (params.length === 2) {
       console.log(`lisätään henkilö ${name} numero ${number} luetteloon`)
       mongoose.connection.close()
     })
-  
+
 } else if (params.length === 0) {
   mongoose.connect(connectionString, { useNewUrlParser: true })
 

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const Person = require('./models/person')
 
-morgan.token('content', (req, res) => JSON.stringify(req.body))
+morgan.token('content', req => JSON.stringify(req.body))
 
 const app = express()
 app.use(express.static('build'))
@@ -47,8 +47,8 @@ app.put('/api/persons/:id', (req, res, next) => {
 
   Person
     .findByIdAndUpdate(
-      req.params.id, 
-      person, 
+      req.params.id,
+      person,
       {
         context: 'query',
         new: true,
@@ -74,7 +74,7 @@ app.get('/info', (req, res) => {
 const errorHandler = (err, req, res, next) => {
   console.error(err.message)
 
-  if (err.name === 'CastError' && err.kind == 'ObjectId') {
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
     return res.status(400).send({ error: 'malformatted id' })
   }
 

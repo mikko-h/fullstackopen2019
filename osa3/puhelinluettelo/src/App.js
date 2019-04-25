@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import personsService from './services/persons'
 import './index.css'
 
@@ -17,11 +18,20 @@ const Notification = ({ message, type }) => {
   return null
 }
 
-const Filter = ({handleChange}) => (
+Notification.propTypes = {
+  message: PropTypes.string.isRequired,
+  type: PropTypes.oneOf([TYPE_ERROR, TYPE_SUCCESS]).isRequired
+}
+
+const Filter = ({ handleChange }) => (
   <div>
     rajaa näytettäviä <input onChange={handleChange} />
   </div>
 )
+
+Filter.propTypes = {
+  handleChange: PropTypes.func.isRequired
+}
 
 const PersonForm = ({
   handleNameChange,
@@ -43,18 +53,32 @@ const PersonForm = ({
   </form>
 )
 
-const Person = ({name, number, handleRemove}) => (
+PersonForm.propTypes = {
+  handleNameChange: PropTypes.func.isRequired,
+  handleNumberChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  newName: PropTypes.string,
+  newNumber: PropTypes.string
+}
+
+const Person = ({ name, number, handleRemove }) => (
   <div>{name} {number} <button onClick={handleRemove}>poista</button></div>
 )
 
-const Persons = ({persons, filter, handleRemove}) =>
+Person.propTypes = {
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  handleRemove: PropTypes.func.isRequired
+}
+
+const Persons = ({ persons, filter, handleRemove }) =>
   persons
     .filter(filter)
     .map(person => (<Person key={person.name} handleRemove={() => handleRemove(person.id)} {...person} />))
 
 const App = () => {
   const [ notification, setNotification ] = useState(null)
-  const [ persons, setPersons ] = useState([]) 
+  const [ persons, setPersons ] = useState([])
   const [ nameFilter, setNameFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
@@ -62,7 +86,7 @@ const App = () => {
   const showNotification = (message, type = TYPE_SUCCESS) => {
     setNotification({ message, type })
     setTimeout(() => setNotification(null), 5000)
-  } 
+  }
 
   const handleChange = setState => event => setState(event.target.value)
 
@@ -92,7 +116,7 @@ const App = () => {
 
     if (existingPerson) {
       const confirmation = window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)
-      
+
       if (confirmation) {
         personsService
           .update({
@@ -119,7 +143,7 @@ const App = () => {
           setPersons(persons.concat(person))
           setNewName('')
           setNewNumber('')
-          showNotification(`Lisättiin ${person.name}`) 
+          showNotification(`Lisättiin ${person.name}`)
         })
         .catch(err => {
           showNotification(err.response.data.error, TYPE_ERROR)

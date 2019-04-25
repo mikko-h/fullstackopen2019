@@ -23,13 +23,13 @@ mongoose.connect(url, {
 const personSchema = new mongoose.Schema({
   name: {
     minlength: 3,
-    required: true, 
+    required: true,
     type: String,
-    unique: true 
+    unique: true
   },
-  number: { 
+  number: {
     minlength: 8,
-    required: true, 
+    required: true,
     type: String
   }
 })

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "deploy": "( cd $(git rev-parse --show-toplevel) && git push heroku $(git subtree split --prefix osa3/puhelinluettelo-backend master):master --force )",
+    "lint": "eslint .",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon index.js"
@@ -22,6 +23,7 @@
     "morgan": "^1.9.1"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
     "nodemon": "^1.18.11"
   }
 }
