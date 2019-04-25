@@ -1,0 +1,24 @@
+{
+  "name": "blogilista-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon index.js"
+  },
+  "author": "Mikko Haaramo",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv-flow": "^0.4.0-rc.1",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "nodemon": "^1.18.11"
+  }
+}
