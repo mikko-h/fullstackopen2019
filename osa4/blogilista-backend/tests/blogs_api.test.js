@@ -38,7 +38,7 @@ describe('when there is initially some blogs saved', () => {
       title: 'Go To Statement Considered Harmful',
       author: 'Edsger W. Dijkstra',
       url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-      likes: 5,
+      likes: 5
     }
 
     await api
@@ -52,6 +52,22 @@ describe('when there is initially some blogs saved', () => {
 
     const titles = blogsAtEnd.map(b => b.title)
     expect(titles).toContain(newBlog.title)
+  })
+
+  test('likes value of a new blog is set to 0 if unset', async () => {
+    const newBlog = {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body.likes).toBe(0)
   })
 })
 
