@@ -58,7 +58,7 @@ describe('when there is initially some blogs saved', () => {
     const newBlog = {
       title: 'Go To Statement Considered Harmful',
       author: 'Edsger W. Dijkstra',
-      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
     }
 
     const response = await api
@@ -68,6 +68,30 @@ describe('when there is initially some blogs saved', () => {
       .expect('Content-Type', /application\/json/)
 
     expect(response.body.likes).toBe(0)
+  })
+
+  test('a blog without title cannot be added', async () => {
+    const newBlog = {
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('a blog without url cannot be added', async () => {
+    const newBlog = {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
   })
 })
 
