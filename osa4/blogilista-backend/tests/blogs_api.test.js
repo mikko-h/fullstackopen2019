@@ -32,6 +32,27 @@ describe('when there is initially some blogs saved', () => {
     expect(Array.isArray(response.body)).toEqual(true)
     response.body.forEach(blog => expect(blog.id).toBeDefined())
   })
+
+  test('a new blog can be added', async () => {
+    const newBlog = {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+
+    const titles = blogsAtEnd.map(b => b.title)
+    expect(titles).toContain(newBlog.title)
+  })
 })
 
 afterAll(() => {
