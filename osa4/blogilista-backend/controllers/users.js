@@ -5,7 +5,7 @@ const { PasswordError } = require('../utils/errors')
 
 usersRouter.get('/', async (request, response, next) => {
   try {
-    const users = await User.find({})
+    const users = await User.find({}).populate('blogs', '-user')
     if (users) {
       response.json(users)
     } else {
