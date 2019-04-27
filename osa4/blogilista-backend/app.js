@@ -8,7 +8,10 @@ const middleware = require('./utils/middleware')
 
 const app = express()
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
+mongoose.connect(
+  config.MONGODB_URI,
+  { useFindAndModify: false, useNewUrlParser: true }
+)
 
 app.use(cors())
 app.use(bodyParser.json())

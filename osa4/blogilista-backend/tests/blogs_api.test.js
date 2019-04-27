@@ -108,6 +108,25 @@ describe('when there is initially some blogs saved', () => {
     const titles = blogsAtEnd.map(b => b.title)
     expect(titles).not.toContain(blogToDelete.title)
   })
+
+  test('number of likes can be updated', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    const newLikes = blogToUpdate.likes + 1
+    const updatedProps = {
+      ...blogToUpdate,
+      likes: newLikes
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedProps)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+    expect(updatedBlog.likes).toBe(newLikes)
+  })
 })
 
 afterAll(() => {
