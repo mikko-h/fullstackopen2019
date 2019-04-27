@@ -11,7 +11,11 @@ const app = express()
 
 mongoose.connect(
   config.MONGODB_URI,
-  { useFindAndModify: false, useNewUrlParser: true }
+  {
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useNewUrlParser: true
+  }
 )
 
 app.use(cors())
