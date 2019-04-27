@@ -8,6 +8,7 @@ const blogSchema = mongoose.Schema({
 })
 
 blogSchema.set('toJSON', {
+  versionKey: false,
   virtuals: true,
   transform: (doc, ret) => {
     const { _id, ...rest } = ret

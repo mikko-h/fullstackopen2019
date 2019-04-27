@@ -12,6 +12,7 @@
   "author": "Mikko Haaramo",
   "license": "UNLICENCED",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
     "dotenv-flow": "^0.4.0-rc.1",
