@@ -3,16 +3,24 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
-describe('when there is initially some blogs saved', () => {
+describe('when there is initially some blogs and one user saved', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
 
     const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
+
+    await User.deleteMany({})
+    const user = new User({
+      username: 'root',
+      passwordHash: await helper.hashPassword('sekret')
+    })
+    await user.save()
   })
 
   test('blogs are returned as json', async () => {
@@ -41,8 +49,11 @@ describe('when there is initially some blogs saved', () => {
       likes: 5
     }
 
+    const token = await helper.tokenForUser('root')
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -61,8 +72,11 @@ describe('when there is initially some blogs saved', () => {
       url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
     }
 
+    const token = await helper.tokenForUser('root')
+
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -76,8 +90,11 @@ describe('when there is initially some blogs saved', () => {
       url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html'
     }
 
+    const token = await helper.tokenForUser('root')
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
@@ -88,8 +105,11 @@ describe('when there is initially some blogs saved', () => {
       author: 'Edsger W. Dijkstra'
     }
 
+    const token = await helper.tokenForUser('root')
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
