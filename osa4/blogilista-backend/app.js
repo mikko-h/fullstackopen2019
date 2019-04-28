@@ -21,6 +21,7 @@ mongoose.connect(
 
 app.use(cors())
 app.use(bodyParser.json())
+app.use(middleware.tokenExtractor)
 
 app.use('/api/login', loginRouter)
 app.use('/api/blogs', blogsRouter)
