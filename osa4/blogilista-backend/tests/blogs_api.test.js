@@ -9,18 +9,22 @@ const api = supertest(app)
 
 describe('when there is initially some blogs and one user saved', () => {
   beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blog => blog.save())
-    await Promise.all(promiseArray)
-
     await User.deleteMany({})
     const user = new User({
       username: 'root',
       passwordHash: await helper.hashPassword('sekret')
     })
     await user.save()
+
+    await Blog.deleteMany({})
+    const blogObjects = helper.initialBlogs.map(blog => new Blog({
+      ...blog,
+      user
+    }))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    const savedBlogs = await Promise.all(promiseArray)
+    user.blogs = savedBlogs.map(b => b._id)
+    user.save()
   })
 
   test('blogs are returned as json', async () => {
@@ -118,8 +122,11 @@ describe('when there is initially some blogs and one user saved', () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
+    const token = await helper.tokenForUser('root')
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()

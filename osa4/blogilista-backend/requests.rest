@@ -49,6 +49,14 @@ Content-type: application/json
 # @name delete
 DELETE {{BASE_URL}}/blogs/{{getAll.response.body.9.id}} HTTP/1.1
 Content-type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+###
+
+# @name invalidDelete
+DELETE {{BASE_URL}}/blogs/{{getAll.response.body.9.id}} HTTP/1.1
+Content-type: application/json
+Authorization: Bearer invalidtoken
 
 ###
 
