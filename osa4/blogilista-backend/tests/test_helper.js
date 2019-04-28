@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const config = require('../utils/config')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
@@ -56,8 +58,19 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, saltRounds)
 }
 
+const tokenForUser = async (username) => {
+  const user = await User.findOne({ username })
+  const userForToken = {
+    username: user.username,
+    id: user._id,
+  }
+
+  return jwt.sign(userForToken, config.SECRET)
+}
+
 module.exports = {
   hashPassword,
+  tokenForUser,
   initialBlogs,
   blogsInDb,
   usersInDb
