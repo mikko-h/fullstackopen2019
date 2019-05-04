@@ -2,16 +2,21 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateFrom from './components/CreateForm'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
 const App = () => {
+  const TYPE_ERROR = 'error'
+  const TYPE_SUCCESS = 'success'
   const USER_STORAGE_KEY = 'loggedInUser'
+
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -44,10 +49,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Invalid username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      showNotification('Invalid username or password', TYPE_ERROR)
     }
   }
 
@@ -60,17 +62,21 @@ const App = () => {
     try {
       const newBlog = await blogService.create(values, user.token)
       setBlogs(blogs.concat(newBlog))
+      showNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`)
     } catch (exception) {
-      setErrorMessage('Failed to create blog')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      showNotification('Failed to create a new blog', TYPE_ERROR)
     }
+  }
+
+  const showNotification = (message, type = TYPE_SUCCESS) => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification(null), 5000)
   }
 
   const loginPage = () => (
     <div>
       <h2>Log in to application</h2>
+        <Notification {...notification} />
         <LoginForm
           username={username}
           password={password}
@@ -78,13 +84,13 @@ const App = () => {
           onPasswordChange={({ target }) => setPassword(target.value)}
           onSubmit={handleLogin}
         />
-      <div>{errorMessage}</div>
     </div>
   )
 
   const blogList = () => (
     <div>
       <h2>blogs</h2>
+      <Notification {...notification} />
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
       <h3>create new</h3>
