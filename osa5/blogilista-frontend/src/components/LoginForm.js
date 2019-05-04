@@ -1,4 +1,5 @@
 import React from 'react'
+import { TextField, PasswordField } from './Fields'
 
 const LoginForm = ({
   username,
@@ -8,24 +9,18 @@ const LoginForm = ({
   onSubmit
 }) => (
   <form onSubmit={onSubmit}>
-    <div>
-      <label htmlFor="username">Username:</label>
-      <input
-        type="text"
-        value={username}
-        id="username"
-        onChange={onUsernameChange}
-      />
-    </div>
-    <div>
-      <label htmlFor="password">Password:</label>
-      <input
-        type="password"
-        value={password}
-        id="password"
-        onChange={onPasswordChange}
-      />
-    </div>
+    <TextField
+      id="username"
+      label="Username:"
+      value={username}
+      onChange={onUsernameChange}
+    />
+    <PasswordField
+      id="password"
+      label="Password:"
+      value={password}
+      onChange={onPasswordChange}
+    />
     <button type="submit">Log in</button>
   </form>
 )

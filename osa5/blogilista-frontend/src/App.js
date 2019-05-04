@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
+import CreateFrom from './components/CreateForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -55,6 +56,18 @@ const App = () => {
     setUser(null)
   }
 
+  const handleCreate = async (values) => {
+    try {
+      const newBlog = await blogService.create(values, user.token)
+      setBlogs(blogs.concat(newBlog))
+    } catch (exception) {
+      setErrorMessage('Failed to create blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   const loginPage = () => (
     <div>
       <h2>Log in to application</h2>
@@ -74,6 +87,8 @@ const App = () => {
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
+      <h3>create new</h3>
+      <CreateFrom handleCreate={handleCreate} />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
