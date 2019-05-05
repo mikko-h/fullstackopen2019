@@ -2,22 +2,19 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
-}
-
-const create = (newBlog, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+const config = token => ({
+  headers: {
+    Authorization: `Bearer ${token}`
   }
+})
 
-  return axios
-    .post(baseUrl, newBlog, config)
-    .then(response => response.data)
-}
+const getAll = () => axios
+  .get(baseUrl)
+  .then(response => response.data)
+
+const create = (newBlog, token) => axios
+  .post(baseUrl, newBlog, config(token))
+  .then(response => response.data)
 
 const update = ({ id, user, ...blogProps }) => axios
   .put(`${baseUrl}/${id}`, {
@@ -26,8 +23,12 @@ const update = ({ id, user, ...blogProps }) => axios
   })
   .then(response => response.data)
 
+const remove = (id, token) => axios
+  .delete(`${baseUrl}/${id}`, config(token))
+
 export default {
   getAll,
   create,
-  update
+  update,
+  remove
 }

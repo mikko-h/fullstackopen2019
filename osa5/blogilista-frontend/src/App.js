@@ -85,6 +85,19 @@ const App = () => {
     }
   }
 
+  const handleRemoveClick = async (blog) => {
+    const confirmation = window.confirm(`remove blog ${blog.title} by ${blog.author}?`)
+
+    if (confirmation) {
+      try {
+        await blogService.remove(blog.id, user.token)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      } catch (exception) {
+        showNotification('Failed to remove a blog', TYPE_ERROR)
+      }
+    }
+  }
+
   const showNotification = (message, type = TYPE_SUCCESS) => {
     setNotification({ message, type })
     setTimeout(() => setNotification(null), 5000)
@@ -114,7 +127,12 @@ const App = () => {
         <CreateForm handleCreate={handleCreate} />
       </Togglable>
       {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} onLikeClick={handleLikeClick} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          onLikeClick={handleLikeClick}
+          onRemoveClick={handleRemoveClick}
+        />
       )}
     </div>
   )
