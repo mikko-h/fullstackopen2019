@@ -103,6 +103,8 @@ const App = () => {
     setTimeout(() => setNotification(null), 5000)
   }
 
+  const isOwnBlog = blog => blog.user && blog.user.username === user.username
+
   const loginPage = () => (
     <div>
       <h2>Log in to application</h2>
@@ -130,6 +132,7 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          removable={isOwnBlog(blog)}
           onLikeClick={handleLikeClick}
           onRemoveClick={handleRemoveClick}
         />
