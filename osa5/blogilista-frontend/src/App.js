@@ -106,14 +106,14 @@ const App = () => {
   const loginPage = () => (
     <div>
       <h2>Log in to application</h2>
-        <Notification {...notification} />
-        <LoginForm
-          username={username}
-          password={password}
-          onUsernameChange={({ target }) => setUsername(target.value)}
-          onPasswordChange={({ target }) => setPassword(target.value)}
-          onSubmit={handleLogin}
-        />
+      <Notification {...notification} />
+      <LoginForm
+        username={username}
+        password={password}
+        onUsernameChange={({ target }) => setUsername(target.value)}
+        onPasswordChange={({ target }) => setPassword(target.value)}
+        onSubmit={handleLogin}
+      />
     </div>
   )
 

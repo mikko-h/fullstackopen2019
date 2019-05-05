@@ -11,7 +11,7 @@ const CreateForm = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await handleCreate({ title, author, url})
+    await handleCreate({ title, author, url })
 
     setTitle('')
     setAuthor('')
