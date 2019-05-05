@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { TextField } from './Fields'
 
 const CreateForm = ({
@@ -43,6 +44,10 @@ const CreateForm = ({
       </form>
     </div>
   )
+}
+
+CreateForm.propTypes = {
+  handleCreate: PropTypes.func.isRequired
 }
 
 export default CreateForm

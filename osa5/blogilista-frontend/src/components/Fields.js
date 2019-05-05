@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const GenericField = ({
   type,
@@ -17,6 +18,14 @@ const GenericField = ({
     />
   </div>
 )
+
+GenericField.propTypes = {
+  type: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func
+}
 
 export const TextField = (props) => (
   <GenericField type="text" {...props} />

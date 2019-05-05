@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
-import Notification from './components/Notification'
+import Notification, { TYPE_ERROR, TYPE_SUCCESS } from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
 
 const App = () => {
-  const TYPE_ERROR = 'error'
-  const TYPE_SUCCESS = 'success'
   const USER_STORAGE_KEY = 'loggedInUser'
 
   const [blogs, setBlogs] = useState([])
@@ -103,7 +101,7 @@ const App = () => {
     setTimeout(() => setNotification(null), 5000)
   }
 
-  const isOwnBlog = blog => blog.user && blog.user.username === user.username
+  const isOwnBlog = blog => !!blog.user && blog.user.username === user.username
 
   const loginPage = () => (
     <div>

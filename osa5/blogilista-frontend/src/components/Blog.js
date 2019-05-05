@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, removable, onLikeClick, onRemoveClick }) => {
   const blogStyle = {
@@ -30,6 +31,20 @@ const Blog = ({ blog, removable, onLikeClick, onRemoveClick }) => {
       {expanded && blogDetails()}
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string
+    }),
+  }),
+  removable: PropTypes.bool.isRequired,
+  onLikeClick: PropTypes.func.isRequired,
+  onRemoveClick: PropTypes.func.isRequired
 }
 
 export default Blog
