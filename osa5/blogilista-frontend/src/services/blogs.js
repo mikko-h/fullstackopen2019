@@ -19,7 +19,15 @@ const create = (newBlog, token) => {
     .then(response => response.data)
 }
 
+const update = ({ id, user, ...blogProps }) => axios
+  .put(`${baseUrl}/${id}`, {
+    ...blogProps,
+    user: user && user.id
+  })
+  .then(response => response.data)
+
 export default {
   getAll,
-  create
+  create,
+  update
 }

@@ -60,7 +60,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
         new: true,
         runValidators: true
       }
-    )
+    ).populate('user', '-blogs')
     response.json(updatedBlog)
   } catch (exception) {
     next(exception)

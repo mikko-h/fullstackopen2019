@@ -73,6 +73,18 @@ const App = () => {
     }
   }
 
+  const handleLikeClick = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update({
+        ...blog,
+        likes: blog.likes + 1
+      })
+      setBlogs(blogs.map(b => b.id === updatedBlog.id ? updatedBlog : b))
+    } catch (exception) {
+      showNotification('Failed to update a blog', TYPE_ERROR)
+    }
+  }
+
   const showNotification = (message, type = TYPE_SUCCESS) => {
     setNotification({ message, type })
     setTimeout(() => setNotification(null), 5000)
@@ -102,7 +114,7 @@ const App = () => {
         <CreateForm handleCreate={handleCreate} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onLikeClick={handleLikeClick} />
       )}
     </div>
   )
