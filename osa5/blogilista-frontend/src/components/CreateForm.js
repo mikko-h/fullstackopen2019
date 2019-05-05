@@ -18,27 +18,30 @@ const CreateForm = ({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        id="title"
-        label="Title:"
-        value={title}
-        onChange={({ target }) => setTitle(target.value)}
-      />
-      <TextField
-        id="author"
-        label="Author:"
-        value={author}
-        onChange={({ target }) => setAuthor(target.value)}
-      />
-      <TextField
-        id="url"
-        label="URL:"
-        value={url}
-        onChange={({ target }) => setUrl(target.value)}
-      />
-      <button type="submit">create</button>
-    </form>
+    <div>
+      <h3>create new</h3>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          id="title"
+          label="Title:"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
+        <TextField
+          id="author"
+          label="Author:"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+        <TextField
+          id="url"
+          label="URL:"
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+        />
+        <button type="submit">create</button>
+      </form>
+    </div>
   )
 }
 

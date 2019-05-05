@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
-import CreateFrom from './components/CreateForm'
+import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
@@ -32,6 +33,8 @@ const App = () => {
     }
   }, [])
 
+  const createFormRef = React.createRef()
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -59,6 +62,8 @@ const App = () => {
   }
 
   const handleCreate = async (values) => {
+    createFormRef.current.toggleVisibility()
+
     try {
       const newBlog = await blogService.create(values, user.token)
       setBlogs(blogs.concat(newBlog))
@@ -93,8 +98,9 @@ const App = () => {
       <Notification {...notification} />
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
-      <h3>create new</h3>
-      <CreateFrom handleCreate={handleCreate} />
+      <Togglable buttonLabel='create new' ref={createFormRef}>
+        <CreateForm handleCreate={handleCreate} />
+      </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
