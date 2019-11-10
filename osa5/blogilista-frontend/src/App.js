@@ -104,7 +104,7 @@ const App = () => {
   const isOwnBlog = blog => !!blog.user && blog.user.username === user.username
 
   const loginPage = () => (
-    <div>
+    <div className='login-page'>
       <h2>Log in to application</h2>
       <Notification {...notification} />
       <LoginForm
@@ -118,7 +118,7 @@ const App = () => {
   )
 
   const blogList = () => (
-    <div>
+    <div className='bloglist-page'>
       <h2>blogs</h2>
       <Notification {...notification} />
       <p>{user.name} logged in</p>
