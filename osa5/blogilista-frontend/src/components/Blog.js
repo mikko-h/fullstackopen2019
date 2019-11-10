@@ -17,7 +17,7 @@ const Blog = ({ blog, removable, onLikeClick, onRemoveClick }) => {
   const [expanded, setExpanded] = useState(false)
 
   const blogDetails = () => (
-    <div>
+    <div className='blog-details'>
       <a href={blog.url}>{blog.url}</a>
       <div>{blog.likes} likes <button onClick={() => onLikeClick(blog)}>like</button></div>
       {blog.user && <div>added by {blog.user.name}</div>}
@@ -27,7 +27,7 @@ const Blog = ({ blog, removable, onLikeClick, onRemoveClick }) => {
 
   return (
     <div style={blogStyle}>
-      <div style={expandStyle} onClick={() => setExpanded(!expanded)}>{blog.title} {blog.author}</div>
+      <div className='blog-title' style={expandStyle} onClick={() => setExpanded(!expanded)}>{blog.title} {blog.author}</div>
       {expanded && blogDetails()}
     </div>
   )
