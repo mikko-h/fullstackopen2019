@@ -21,7 +21,7 @@ const initialState = anecdotesAtStart.map(asObject)
 
 const sorted = anecdotes => anecdotes.sort((a, b) => b.votes - a.votes)
 
-const reducer = (state = initialState, action) => {
+const anecdoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'NEW_ANECDOTE':
       return sorted(state.concat(action.data))
@@ -42,4 +42,4 @@ export const createAnecdote = (anecdote) => ({
   data: asObject(anecdote)
 })
 
-export default reducer
+export default anecdoteReducer
