@@ -1,36 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { TextField, PasswordField } from './Fields'
+import { GenericField } from './Fields'
 
 const LoginForm = ({
   username,
   password,
-  onUsernameChange,
-  onPasswordChange,
   onSubmit
 }) => (
   <form onSubmit={onSubmit}>
-    <TextField
+    <GenericField
       id="username"
       label="Username:"
-      value={username}
-      onChange={onUsernameChange}
+      {...username}
     />
-    <PasswordField
+    <GenericField
       id="password"
       label="Password:"
-      value={password}
-      onChange={onPasswordChange}
+      {...password}
     />
     <button type="submit">Log in</button>
   </form>
 )
 
+const fieldType = PropTypes.shape({
+  type: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired
+})
+
 LoginForm.propTypes = {
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  onUsernameChange: PropTypes.func.isRequired,
-  onPasswordChange: PropTypes.func.isRequired,
+  username: fieldType,
+  password: fieldType,
   onSubmit: PropTypes.func.isRequired
 }
 

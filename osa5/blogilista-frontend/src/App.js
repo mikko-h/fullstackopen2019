@@ -6,6 +6,7 @@ import Notification, { TYPE_ERROR, TYPE_SUCCESS } from './components/Notificatio
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useField } from './hooks'
 import './index.css'
 
 const App = () => {
@@ -13,8 +14,8 @@ const App = () => {
 
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [notification, setNotification] = useState(null)
 
   useEffect(() => {
@@ -37,8 +38,8 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username,
-        password,
+        username: username.value,
+        password: password.value,
       })
 
       window.localStorage.setItem(
@@ -47,8 +48,8 @@ const App = () => {
       )
 
       setUser(user)
-      setUsername('')
-      setPassword('')
+      //setUsername('')
+      //setPassword('')
     } catch (exception) {
       showNotification('Invalid username or password', TYPE_ERROR)
     }
@@ -110,8 +111,6 @@ const App = () => {
       <LoginForm
         username={username}
         password={password}
-        onUsernameChange={({ target }) => setUsername(target.value)}
-        onPasswordChange={({ target }) => setPassword(target.value)}
         onSubmit={handleLogin}
       />
     </div>

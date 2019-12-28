@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const GenericField = ({
+export const GenericField = ({
   type,
   id,
   label,
