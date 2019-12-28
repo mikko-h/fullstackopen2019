@@ -7,10 +7,12 @@ import Notification from './components/Notification'
 const App = ({ store }) => (
   <div>
     <h2>Anecdotes</h2>
+    {/*
     <Notification store={store} />
     <Filter store={store} />
     <AnecdoteForm store={store} />
-    <AnecdoteList store={store} />
+    */}
+    <AnecdoteList />
   </div>
 )
 
