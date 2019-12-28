@@ -48,8 +48,8 @@ const App = () => {
       )
 
       setUser(user)
-      //setUsername('')
-      //setPassword('')
+      username.reset()
+      password.reset()
     } catch (exception) {
       showNotification('Invalid username or password', TYPE_ERROR)
     }

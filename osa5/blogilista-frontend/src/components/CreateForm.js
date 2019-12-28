@@ -1,44 +1,46 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { TextField } from './Fields'
+import { GenericField } from './Fields'
+import { useField } from '../hooks'
 
 const CreateForm = ({
   handleCreate
 }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await handleCreate({ title, author, url })
+    await handleCreate({
+      title: title.value,
+      author: author.value,
+      url: url.value
+    })
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    title.reset()
+    author.reset()
+    url.reset()
   }
 
   return (
     <div>
       <h3>create new</h3>
       <form onSubmit={handleSubmit}>
-        <TextField
+        <GenericField
           id="title"
           label="Title:"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
+          {...title}
         />
-        <TextField
+        <GenericField
           id="author"
           label="Author:"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
+          {...author}
         />
-        <TextField
+        <GenericField
           id="url"
           label="URL:"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
+          {...url}
         />
         <button type="submit">create</button>
       </form>
