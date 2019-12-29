@@ -4,17 +4,17 @@ import Filter from '../components/Filter'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const AnecdoteList = ({ visibleAnecdotes, voteAnecdote, setNotification }) => {
+const AnecdoteList = (props) => {
 
   const vote = (anecdote) => {
-    voteAnecdote(anecdote)
-    setNotification(`You voted '${anecdote.content}'`)
+    props.voteAnecdote(anecdote)
+    props.setNotification(`You voted '${anecdote.content}'`, 5)
   }
 
   return (
     <>
       <Filter />
-      {visibleAnecdotes
+      {props.visibleAnecdotes
         .map(anecdote =>
         <div key={anecdote.id}>
           <div>
