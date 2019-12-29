@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 import { resetNotification } from '../reducers/notificationReducer'
 
-const Notification = ({ store: { dispatch, getState } }) => {
+const Notification = ({ notification, resetNotification: propResetNotification }) => {
   const style = {
     border: 'solid',
     padding: 10,
     borderWidth: 1
   }
 
-  const notification = getState().notification
-
   useEffect(() => {
-    const timer = setTimeout(() => dispatch(resetNotification()), 5000)
+    const timer = setTimeout(() => propResetNotification(), 5000)
     return () => clearTimeout(timer)
-  },  [dispatch, notification])
+  },  [notification, propResetNotification])
 
   return (
     <div style={style}>
@@ -22,4 +21,11 @@ const Notification = ({ store: { dispatch, getState } }) => {
   )
 }
 
-export default Notification
+const mapStateToProps = ({ notification }) => ({ notification })
+
+const mapDispatchToProps = {
+  resetNotification
+}
+
+const ConnectedNotification = connect(mapStateToProps, mapDispatchToProps)(Notification)
+export default ConnectedNotification
