@@ -4,18 +4,17 @@ import Filter from '../components/Filter'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const AnecdoteList = ({ anecdotes, filter, voteAnecdote, setNotification }) => {
+const AnecdoteList = ({ visibleAnecdotes, voteAnecdote, setNotification }) => {
 
   const vote = (id) => {
     voteAnecdote(id)
-    setNotification(`You voted '${anecdotes.find(anecdote => anecdote.id === id).content}'`)
+    setNotification(`You voted '${visibleAnecdotes.find(anecdote => anecdote.id === id).content}'`)
   }
 
   return (
     <>
       <Filter />
-      {anecdotes
-        .filter(anecdote => anecdote.content.includes(filter))
+      {visibleAnecdotes
         .map(anecdote =>
         <div key={anecdote.id}>
           <div>
@@ -31,9 +30,10 @@ const AnecdoteList = ({ anecdotes, filter, voteAnecdote, setNotification }) => {
   )
 }
 
-const mapStateToProps = ({ anecdotes, filter }) => ({
-  anecdotes,
-  filter
+const anecdotesToShow = ({ anecdotes, filter }) => anecdotes.filter(anecdote => anecdote.content.includes(filter))
+
+const mapStateToProps = (state) => ({
+  visibleAnecdotes: anecdotesToShow(state)
 })
 
 const mapDispatchToProps = {
