@@ -6,9 +6,9 @@ import { setNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = ({ visibleAnecdotes, voteAnecdote, setNotification }) => {
 
-  const vote = (id) => {
-    voteAnecdote(id)
-    setNotification(`You voted '${visibleAnecdotes.find(anecdote => anecdote.id === id).content}'`)
+  const vote = (anecdote) => {
+    voteAnecdote(anecdote)
+    setNotification(`You voted '${anecdote.content}'`)
   }
 
   return (
@@ -22,7 +22,7 @@ const AnecdoteList = ({ visibleAnecdotes, voteAnecdote, setNotification }) => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       )}
