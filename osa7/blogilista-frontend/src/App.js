@@ -5,24 +5,21 @@ import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import blogService from './services/blogs'
 import loginService from './services/login'
 import { useField } from './hooks'
+import { createBlog, initBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification, TYPE_ERROR } from './reducers/notificationReducer'
 import './index.css'
 
 const App = (props) => {
   const USER_STORAGE_KEY = 'loggedInUser'
 
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const username = useField('text')
   const password = useField('password')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    props.initBlogs()
   }, [])
 
   useEffect(() => {
@@ -65,9 +62,8 @@ const App = (props) => {
     createFormRef.current.toggleVisibility()
 
     try {
-      const newBlog = await blogService.create(values, user.token)
-      setBlogs(blogs.concat(newBlog))
-      props.setNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`)
+      await props.createBlog(values, props.user.token)
+      props.setNotification(`A new blog ${values.title} by ${values.author} added`)
     } catch (exception) {
       props.setNotification('Failed to create a new blog', TYPE_ERROR)
     }
@@ -75,13 +71,9 @@ const App = (props) => {
 
   const handleLikeClick = async (blog) => {
     try {
-      const updatedBlog = await blogService.update({
-        ...blog,
-        likes: blog.likes + 1
-      })
-      setBlogs(blogs.map(b => b.id === updatedBlog.id ? updatedBlog : b))
+      await props.likeBlog(blog)
     } catch (exception) {
-      props.setNotification('Failed to update a blog', TYPE_ERROR)
+      props.setNotification('Failed to like a blog', TYPE_ERROR)
     }
   }
 
@@ -90,8 +82,7 @@ const App = (props) => {
 
     if (confirmation) {
       try {
-        await blogService.remove(blog.id, user.token)
-        setBlogs(blogs.filter(b => b.id !== blog.id))
+        await props.removeBlog(blog.id, props.user.token)
       } catch (exception) {
         props.setNotification('Failed to remove a blog', TYPE_ERROR)
       }
@@ -121,7 +112,7 @@ const App = (props) => {
       <Togglable buttonLabel='create new' ref={createFormRef}>
         <CreateForm handleCreate={handleCreate} />
       </Togglable>
-      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+      {props.blogs.sort((a, b) => b.likes - a.likes).map(blog =>
         <Blog
           key={blog.id}
           blog={blog}
@@ -139,8 +130,14 @@ const App = (props) => {
   )
 }
 
+const mapStateToProps = ({ blogs }) => ({ blogs })
+
 const mapDispatchToProps = {
+  createBlog,
+  initBlogs,
+  likeBlog,
+  removeBlog,
   setNotification
 }
 
-export default connect(null, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)
