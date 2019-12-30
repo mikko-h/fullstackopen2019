@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import loginService from './services/login'
 import { useField } from './hooks'
 import { createBlog, initBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification, TYPE_ERROR } from './reducers/notificationReducer'
+import { loginUser, logoutUser } from './reducers/loginReducer'
 import './index.css'
 
 const App = (props) => {
-  const USER_STORAGE_KEY = 'loggedInUser'
-
-  const [user, setUser] = useState(null)
   const username = useField('text')
   const password = useField('password')
 
@@ -22,47 +19,27 @@ const App = (props) => {
     props.initBlogs()
   }, [])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem(USER_STORAGE_KEY)
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-    }
-  }, [])
-
   const createFormRef = React.createRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
+      await props.loginUser({
         username: username.value,
-        password: password.value,
+        password: password.value
       })
-
-      window.localStorage.setItem(
-        'loggedInUser',
-        JSON.stringify(user)
-      )
-
-      setUser(user)
-      username.reset()
-      password.reset()
-    } catch (exception) {
+    } catch (err) {
       props.setNotification('Invalid username or password', TYPE_ERROR)
     }
-  }
-
-  const handleLogout = () => {
-    window.localStorage.removeItem(USER_STORAGE_KEY)
-    setUser(null)
+    username.reset()
+    password.reset()
   }
 
   const handleCreate = async (values) => {
     createFormRef.current.toggleVisibility()
 
     try {
-      await props.createBlog(values, props.user.token)
+      await props.createBlog(values, props.login.token)
       props.setNotification(`A new blog ${values.title} by ${values.author} added`)
     } catch (exception) {
       props.setNotification('Failed to create a new blog', TYPE_ERROR)
@@ -82,14 +59,14 @@ const App = (props) => {
 
     if (confirmation) {
       try {
-        await props.removeBlog(blog.id, props.user.token)
+        await props.removeBlog(blog.id, props.login.token)
       } catch (exception) {
         props.setNotification('Failed to remove a blog', TYPE_ERROR)
       }
     }
   }
 
-  const isOwnBlog = blog => !!blog.user && blog.user.username === user.username
+  const isOwnBlog = blog => !!blog.user && blog.user.username === props.login.username
 
   const loginPage = () => (
     <div className='login-page'>
@@ -107,8 +84,8 @@ const App = (props) => {
     <div className='bloglist-page'>
       <h2>blogs</h2>
       <Notification />
-      <p>{user.name} logged in</p>
-      <button onClick={handleLogout}>Log out</button>
+      <p>{props.login.name} logged in</p>
+      <button onClick={props.logoutUser}>Log out</button>
       <Togglable buttonLabel='create new' ref={createFormRef}>
         <CreateForm handleCreate={handleCreate} />
       </Togglable>
@@ -125,17 +102,19 @@ const App = (props) => {
   )
   return (
     <>
-      {user === null ? loginPage() : blogList()}
+      {props.user === null ? loginPage() : blogList()}
     </>
   )
 }
 
-const mapStateToProps = ({ blogs }) => ({ blogs })
+const mapStateToProps = ({ blogs, login }) => ({ blogs, login })
 
 const mapDispatchToProps = {
   createBlog,
   initBlogs,
   likeBlog,
+  loginUser,
+  logoutUser,
   removeBlog,
   setNotification
 }
