@@ -1,14 +1,20 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Link, Route
+} from 'react-router-dom'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import UserList from './components/UserList'
 import { useField } from './hooks'
 import { createBlog, initBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification, TYPE_ERROR } from './reducers/notificationReducer'
 import { loginUser, logoutUser } from './reducers/loginReducer'
+import { initUsers } from './reducers/userReducer'
 import './index.css'
 
 const App = (props) => {
@@ -17,6 +23,10 @@ const App = (props) => {
 
   useEffect(() => {
     props.initBlogs()
+  }, [])
+
+  useEffect(() => {
+    props.initUsers()
   }, [])
 
   const createFormRef = React.createRef()
@@ -59,7 +69,7 @@ const App = (props) => {
 
     if (confirmation) {
       try {
-        await props.removeBlog(blog.id, props.login.token)
+        await props.removeBlog(blog, props.login.token)
       } catch (exception) {
         props.setNotification('Failed to remove a blog', TYPE_ERROR)
       }
@@ -68,7 +78,7 @@ const App = (props) => {
 
   const isOwnBlog = blog => !!blog.user && blog.user.username === props.login.username
 
-  const loginPage = () => (
+  const LoginPage = () => (
     <div className='login-page'>
       <h2>Log in to application</h2>
       <Notification />
@@ -80,12 +90,8 @@ const App = (props) => {
     </div>
   )
 
-  const blogList = () => (
+  const BlogList = () => (
     <div className='bloglist-page'>
-      <h2>blogs</h2>
-      <Notification />
-      <p>{props.login.name} logged in</p>
-      <button onClick={props.logoutUser}>Log out</button>
       <Togglable buttonLabel='create new' ref={createFormRef}>
         <CreateForm handleCreate={handleCreate} />
       </Togglable>
@@ -100,18 +106,33 @@ const App = (props) => {
       )}
     </div>
   )
+
   return (
-    <>
-      {props.user === null ? loginPage() : blogList()}
-    </>
+    <Router>
+      <div>
+        <h1>blogs</h1>
+        <Notification />
+        {props.login === null ? LoginPage() :
+        <>
+          <Link to="/">Blogs</Link>{' '}
+          <Link to="/users">Users</Link>
+          <p>{props.login.name} logged in</p>
+          <button onClick={props.logoutUser}>Log out</button>
+          <Route exact path="/" render={BlogList} />
+          <Route path="/users"><UserList /></Route>
+        </>
+        }
+      </div>
+    </Router>
   )
 }
 
-const mapStateToProps = ({ blogs, login }) => ({ blogs, login })
+const mapStateToProps = ({ blogs, login, user }) => ({ blogs, login, user })
 
 const mapDispatchToProps = {
   createBlog,
   initBlogs,
+  initUsers,
   likeBlog,
   loginUser,
   logoutUser,

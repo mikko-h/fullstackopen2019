@@ -5,12 +5,14 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import blogReducer from './reducers/blogReducer'
 import notificationReducer from './reducers/notificationReducer'
 import loginReducer from './reducers/loginReducer'
+import userReducer from './reducers/userReducer'
 import { loadState, saveState } from './storage'
 
 const reducer = combineReducers({
   blogs: blogReducer,
   login: loginReducer,
-  notification: notificationReducer
+  notification: notificationReducer,
+  user: userReducer
 })
 
 const persistedState = loadState()
