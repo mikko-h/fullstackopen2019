@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
-import Notification, { TYPE_ERROR, TYPE_SUCCESS } from './components/Notification'
+import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { useField } from './hooks'
+import { setNotification, TYPE_ERROR } from './reducers/notificationReducer'
 import './index.css'
 
-const App = () => {
+const App = (props) => {
   const USER_STORAGE_KEY = 'loggedInUser'
 
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const username = useField('text')
   const password = useField('password')
-  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -51,7 +52,7 @@ const App = () => {
       username.reset()
       password.reset()
     } catch (exception) {
-      showNotification('Invalid username or password', TYPE_ERROR)
+      props.setNotification('Invalid username or password', TYPE_ERROR)
     }
   }
 
@@ -66,9 +67,9 @@ const App = () => {
     try {
       const newBlog = await blogService.create(values, user.token)
       setBlogs(blogs.concat(newBlog))
-      showNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`)
+      props.setNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`)
     } catch (exception) {
-      showNotification('Failed to create a new blog', TYPE_ERROR)
+      props.setNotification('Failed to create a new blog', TYPE_ERROR)
     }
   }
 
@@ -80,7 +81,7 @@ const App = () => {
       })
       setBlogs(blogs.map(b => b.id === updatedBlog.id ? updatedBlog : b))
     } catch (exception) {
-      showNotification('Failed to update a blog', TYPE_ERROR)
+      props.setNotification('Failed to update a blog', TYPE_ERROR)
     }
   }
 
@@ -92,14 +93,9 @@ const App = () => {
         await blogService.remove(blog.id, user.token)
         setBlogs(blogs.filter(b => b.id !== blog.id))
       } catch (exception) {
-        showNotification('Failed to remove a blog', TYPE_ERROR)
+        props.setNotification('Failed to remove a blog', TYPE_ERROR)
       }
     }
-  }
-
-  const showNotification = (message, type = TYPE_SUCCESS) => {
-    setNotification({ message, type })
-    setTimeout(() => setNotification(null), 5000)
   }
 
   const isOwnBlog = blog => !!blog.user && blog.user.username === user.username
@@ -107,7 +103,7 @@ const App = () => {
   const loginPage = () => (
     <div className='login-page'>
       <h2>Log in to application</h2>
-      <Notification {...notification} />
+      <Notification />
       <LoginForm
         username={username}
         password={password}
@@ -119,7 +115,7 @@ const App = () => {
   const blogList = () => (
     <div className='bloglist-page'>
       <h2>blogs</h2>
-      <Notification {...notification} />
+      <Notification />
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>Log out</button>
       <Togglable buttonLabel='create new' ref={createFormRef}>
@@ -143,4 +139,8 @@ const App = () => {
   )
 }
 
-export default App
+const mapDispatchToProps = {
+  setNotification
+}
+
+export default connect(null, mapDispatchToProps)(App)
