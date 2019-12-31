@@ -4,15 +4,14 @@ import {
   BrowserRouter as Router,
   Link, Route
 } from 'react-router-dom'
-import Blog from './components/Blog'
+import BlogDetails from './components/BlogDetails'
+import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
-import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
 import UserInfo from './components/UserInfo'
 import UserList from './components/UserList'
 import { useField } from './hooks'
-import { createBlog, initBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
+import { initBlogs } from './reducers/blogReducer'
 import { setNotification, TYPE_ERROR } from './reducers/notificationReducer'
 import { loginUser, logoutUser } from './reducers/loginReducer'
 import { initUsers } from './reducers/userReducer'
@@ -30,8 +29,6 @@ const App = (props) => {
     props.initUsers()
   }, [])
 
-  const createFormRef = React.createRef()
-
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -46,39 +43,6 @@ const App = (props) => {
     password.reset()
   }
 
-  const handleCreate = async (values) => {
-    createFormRef.current.toggleVisibility()
-
-    try {
-      await props.createBlog(values, props.login.token)
-      props.setNotification(`A new blog ${values.title} by ${values.author} added`)
-    } catch (exception) {
-      props.setNotification('Failed to create a new blog', TYPE_ERROR)
-    }
-  }
-
-  const handleLikeClick = async (blog) => {
-    try {
-      await props.likeBlog(blog)
-    } catch (exception) {
-      props.setNotification('Failed to like a blog', TYPE_ERROR)
-    }
-  }
-
-  const handleRemoveClick = async (blog) => {
-    const confirmation = window.confirm(`remove blog ${blog.title} by ${blog.author}?`)
-
-    if (confirmation) {
-      try {
-        await props.removeBlog(blog, props.login.token)
-      } catch (exception) {
-        props.setNotification('Failed to remove a blog', TYPE_ERROR)
-      }
-    }
-  }
-
-  const isOwnBlog = blog => !!blog.user && blog.user.username === props.login.username
-
   const LoginPage = () => (
     <div className='login-page'>
       <h2>Log in to application</h2>
@@ -88,23 +52,6 @@ const App = (props) => {
         password={password}
         onSubmit={handleLogin}
       />
-    </div>
-  )
-
-  const BlogList = () => (
-    <div className='bloglist-page'>
-      <Togglable buttonLabel='create new' ref={createFormRef}>
-        <CreateForm handleCreate={handleCreate} />
-      </Togglable>
-      {props.blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          removable={isOwnBlog(blog)}
-          onLikeClick={handleLikeClick}
-          onRemoveClick={handleRemoveClick}
-        />
-      )}
     </div>
   )
 
@@ -119,7 +66,10 @@ const App = (props) => {
           <Link to="/users">Users</Link>
           <p>{props.login.name} logged in</p>
           <button onClick={props.logoutUser}>Log out</button>
-          <Route exact path="/" render={BlogList} />
+          <Route exact path="/"><BlogList /></Route>
+          <Route exact path="/blogs/:id" render={({ match }) =>
+            <BlogDetails id={match.params.id} />
+          } />
           <Route exact path="/users"><UserList /></Route>
           <Route exact path="/users/:id" render={({ match }) =>
             <UserInfo id={match.params.id} />
@@ -134,13 +84,10 @@ const App = (props) => {
 const mapStateToProps = ({ blogs, login, user }) => ({ blogs, login, user })
 
 const mapDispatchToProps = {
-  createBlog,
   initBlogs,
   initUsers,
-  likeBlog,
   loginUser,
   logoutUser,
-  removeBlog,
   setNotification
 }
 

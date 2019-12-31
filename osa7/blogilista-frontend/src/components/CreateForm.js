@@ -1,14 +1,24 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { GenericField } from './Fields'
 import { useField } from '../hooks'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification, TYPE_ERROR } from '../reducers/notificationReducer'
 
-const CreateForm = ({
-  handleCreate
-}) => {
+const CreateForm = (props) => {
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
+
+  const handleCreate = async (values) => {
+    try {
+      await props.createBlog(values, props.token)
+      props.setNotification(`A new blog ${values.title} by ${values.author} added`)
+    } catch (exception) {
+      props.setNotification('Failed to create a new blog', TYPE_ERROR)
+    }
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -21,6 +31,7 @@ const CreateForm = ({
     title.reset()
     author.reset()
     url.reset()
+    props.onSubmit()
   }
 
   return (
@@ -49,7 +60,18 @@ const CreateForm = ({
 }
 
 CreateForm.propTypes = {
-  handleCreate: PropTypes.func.isRequired
+  onSubmit: PropTypes.func,
+  token: PropTypes.string.isRequired,
 }
 
-export default CreateForm
+const mapStateToProps = ({ login: { token } }, { onSubmit }) => ({
+  onSubmit,
+  token
+})
+
+const mapDispatchToProps = {
+  createBlog,
+  setNotification
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateForm)
