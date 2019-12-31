@@ -9,6 +9,7 @@ import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import UserInfo from './components/UserInfo'
 import UserList from './components/UserList'
 import { useField } from './hooks'
 import { createBlog, initBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
@@ -119,7 +120,10 @@ const App = (props) => {
           <p>{props.login.name} logged in</p>
           <button onClick={props.logoutUser}>Log out</button>
           <Route exact path="/" render={BlogList} />
-          <Route path="/users"><UserList /></Route>
+          <Route exact path="/users"><UserList /></Route>
+          <Route exact path="/users/:id" render={({ match }) =>
+            <UserInfo id={match.params.id} />
+          } />
         </>
         }
       </div>
