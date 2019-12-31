@@ -27,7 +27,7 @@ const BlogDetails = (props) => {
     }
   }
 
-  const removable = blog => !!blog && !!blog.user && blog.user.username === props.login.username
+  const removable = blog && blog.user && blog.user.username === props.login.username
 
   return blog === undefined ? null : (
     <div className='blog-details'>

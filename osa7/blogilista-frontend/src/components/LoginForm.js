@@ -1,37 +1,54 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { GenericField } from './Fields'
+import { useField } from '../hooks'
+import { loginUser } from '../reducers/loginReducer'
+import { setNotification, TYPE_ERROR } from '../reducers/notificationReducer'
 
-const LoginForm = ({
-  username,
-  password,
-  onSubmit
-}) => (
-  <form onSubmit={onSubmit}>
-    <GenericField
-      id="username"
-      label="Username:"
-      {...username}
-    />
-    <GenericField
-      id="password"
-      label="Password:"
-      {...password}
-    />
-    <button type="submit">Log in</button>
-  </form>
-)
+const LoginForm = (props) => {
+  const username = useField('text')
+  const password = useField('password')
 
-const fieldType = PropTypes.shape({
-  type: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
-})
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      await props.loginUser({
+        username: username.value,
+        password: password.value
+      })
+    } catch (err) {
+      props.setNotification('Invalid username or password', TYPE_ERROR)
+      username.reset()
+      password.reset()
+    }
+  }
 
-LoginForm.propTypes = {
-  username: fieldType,
-  password: fieldType,
-  onSubmit: PropTypes.func.isRequired
+  return (
+    <form onSubmit={handleLogin}>
+      <GenericField
+        id="username"
+        label="Username:"
+        {...username}
+      />
+      <GenericField
+        id="password"
+        label="Password:"
+        {...password}
+      />
+      <button type="submit">Log in</button>
+    </form>
+  )
 }
 
-export default LoginForm
+const mapDispatchToProps = {
+  loginUser,
+  setNotification
+}
+
+LoginForm.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired
+}
+
+export default connect(null, mapDispatchToProps)(LoginForm)
