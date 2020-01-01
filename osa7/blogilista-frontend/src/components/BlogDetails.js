@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import CommentForm from './CommentForm'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { setNotification, TYPE_ERROR } from '../reducers/notificationReducer'
 
@@ -36,13 +37,12 @@ const BlogDetails = (props) => {
       <div>{blog.likes} likes <button onClick={handleLikeClick}>like</button></div>
       {blog.user && <div>added by {blog.user.name}</div>}
       {removable && <button onClick={handleRemoveClick}>remove</button>}
+      <h4>comments</h4>
+      <CommentForm blog={blog} />
       {blog.comments.length > 0 &&
-      <>
-        <h4>comments</h4>
         <ul>
           {blog.comments.map((comment, i) => <li key={`${blog.id}-${i}`}>{comment}</li>)}
-        </ul>
-      </>}
+        </ul>}
     </div>
   )
 }

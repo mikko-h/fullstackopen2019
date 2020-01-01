@@ -26,9 +26,14 @@ const update = ({ id, user, ...blogProps }) => axios
 const remove = (id, token) => axios
   .delete(`${baseUrl}/${id}`, config(token))
 
+const comment = (id, comment) => axios
+  .post(`${baseUrl}/${id}/comments`, { comment })
+  .then(response => response.data)
+
 export default {
   getAll,
   create,
   update,
-  remove
+  remove,
+  comment
 }
