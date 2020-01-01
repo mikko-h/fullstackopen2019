@@ -60,6 +60,16 @@ Authorization: Bearer invalidtoken
 
 ###
 
+# @name comment
+POST {{BASE_URL}}/blogs/{{getAll.response.body.1.id}}/comments HTTP/1.1
+Content-type: application/json
+
+{
+  "comment": "lol"
+}
+
+###
+
 # @name listUsers
 GET {{BASE_URL}}/users HTTP/1.1
 Content-type: application/json

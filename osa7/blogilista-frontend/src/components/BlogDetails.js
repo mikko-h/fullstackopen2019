@@ -36,6 +36,13 @@ const BlogDetails = (props) => {
       <div>{blog.likes} likes <button onClick={handleLikeClick}>like</button></div>
       {blog.user && <div>added by {blog.user.name}</div>}
       {removable && <button onClick={handleRemoveClick}>remove</button>}
+      {blog.comments.length > 0 &&
+      <>
+        <h4>comments</h4>
+        <ul>
+          {blog.comments.map((comment, i) => <li key={`${blog.id}-${i}`}>{comment}</li>)}
+        </ul>
+      </>}
     </div>
   )
 }
