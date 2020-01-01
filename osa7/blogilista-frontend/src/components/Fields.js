@@ -1,5 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
+
+const Field = styled.div`
+  display: flex;
+  align-items: baseline;
+
+  > :first-child {
+    padding-right: 5px;
+    width: 20%;
+  }
+
+  > :last-child {
+    width: 50%;
+  }
+`
+
+const Input = styled.input`
+  border: 1px solid #1E2749;
+  font-family: inherit;
+  font-size: inherit;
+  margin-bottom: 5px;
+  padding: 5px;
+`
 
 export const GenericField = ({
   type,
@@ -8,15 +31,15 @@ export const GenericField = ({
   value,
   onChange
 }) => (
-  <div>
+  <Field>
     <label htmlFor={id}>{label}</label>
-    <input
+    <Input
       type={type}
       value={value}
       id={id}
       onChange={onChange}
     />
-  </div>
+  </Field>
 )
 
 GenericField.propTypes = {

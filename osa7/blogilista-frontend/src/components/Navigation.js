@@ -2,15 +2,36 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { logoutUser } from '../reducers/loginReducer'
 
+const Nav = styled.nav`
+  align-items: baseline;
+  background: #30343F;
+  color: #FAFAFF;
+  display: flex;
+
+  a {
+    color: #E4D9FF;
+  }
+
+  span {
+    flex-grow: 1;
+    text-align: right;
+  }
+
+  > * {
+    margin: 5px;
+  }
+`
+
 const Navigation = (props) => props.login === null ? null : (
-  <nav className="navigation">
+  <Nav>
     <Link to="/">Blogs</Link>
     <Link to="/users">Users</Link>
     <span>{props.login.name} logged in</span>
     <button onClick={props.logoutUser}>Log out</button>
-  </nav>
+  </Nav>
 )
 
 Navigation.propTypes = {

@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom'
+import styled from 'styled-components'
 import BlogDetails from './components/BlogDetails'
 import BlogList from './components/BlogList'
 import LoginPage from './components/LoginPage'
@@ -14,6 +15,12 @@ import UserList from './components/UserList'
 import { initBlogs } from './reducers/blogReducer'
 import { initUsers } from './reducers/userReducer'
 import './index.css'
+
+const Page = styled.div`
+  font-family: Verdana, sans-serif;
+  margin: 0 auto;
+  max-width: 900px;
+`
 
 const App = (props) => {
   useEffect(() => {
@@ -26,7 +33,7 @@ const App = (props) => {
 
   return (
     <Router>
-      <div>
+      <Page>
         <Navigation />
         <h1>blogs</h1>
         <Notification />
@@ -42,7 +49,7 @@ const App = (props) => {
           } />
         </>
         }
-      </div>
+      </Page>
     </Router>
   )
 }

@@ -33,7 +33,7 @@ const BlogDetails = (props) => {
   return blog === undefined ? null : (
     <div className='blog-details'>
       <h3>{blog.title} {blog.author}</h3>
-      <a href={blog.url}>{blog.url}</a>
+      <p><a href={blog.url}>{blog.url}</a></p>
       <div>{blog.likes} likes <button onClick={handleLikeClick}>like</button></div>
       {blog.user && <div>added by {blog.user.name}</div>}
       {removable && <button onClick={handleRemoveClick}>remove</button>}

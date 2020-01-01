@@ -1,22 +1,29 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-const Blog = ({ blog }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+const Item = styled.div`
+  background: #FAFAFF;
+  border: 1px dotted transparent;
+  border-left: 5px solid #273469;
+  margin-top: 10px;
+  padding: 5px;
+
+  &:hover {
+    border-color: #273469;
   }
 
-  return (
-    <div style={blogStyle}>
-      <Link to={`/blogs/${blog.id}`} className='blog-title'>{blog.title} {blog.author}</Link>
-    </div>
-  )
-}
+  a {
+    text-decoration: none;
+  }
+`
+
+const Blog = ({ blog }) => (
+  <Item>
+    <Link to={`/blogs/${blog.id}`} className='blog-title'>{blog.title} {blog.author}</Link>
+  </Item>
+)
 
 Blog.propTypes = {
   blog: PropTypes.shape({
