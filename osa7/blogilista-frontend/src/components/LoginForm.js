@@ -29,14 +29,16 @@ const LoginForm = (props) => {
       <GenericField
         id="username"
         label="Username:"
+        data-cy="username"
         {...username}
       />
       <GenericField
         id="password"
         label="Password:"
+        data-cy="password"
         {...password}
       />
-      <button type="submit">Log in</button>
+      <button data-cy="login" type="submit">Log in</button>
     </form>
   )
 }

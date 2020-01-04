@@ -29,7 +29,8 @@ export const GenericField = ({
   id,
   label,
   value,
-  onChange
+  onChange,
+  ...inputProps
 }) => (
   <Field>
     <label htmlFor={id}>{label}</label>
@@ -38,6 +39,7 @@ export const GenericField = ({
       value={value}
       id={id}
       onChange={onChange}
+      {...inputProps}
     />
   </Field>
 )

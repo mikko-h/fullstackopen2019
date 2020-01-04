@@ -30,7 +30,7 @@ const Navigation = (props) => props.login === null ? null : (
     <Link to="/">Blogs</Link>
     <Link to="/users">Users</Link>
     <span>{props.login.name} logged in</span>
-    <button onClick={props.logoutUser}>Log out</button>
+    <button data-cy="logout" onClick={props.logoutUser}>Log out</button>
   </Nav>
 )
 
