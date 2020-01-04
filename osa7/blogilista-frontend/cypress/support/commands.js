@@ -32,6 +32,21 @@ Cypress.Commands.add('createUser', (user) => {
       expect(response.body.username).to.equal(user.username)
     })
 })
+
+Cypress.Commands.add('createBlog', (blog) => {
+  const state = JSON.parse(window.localStorage.getItem('state'))
+  cy.request({
+    method: 'POST',
+    url: '/api/blogs',
+    auth: {
+      bearer: state.login.token
+    },
+    body: blog
+  })
+    .then((response) => {
+      expect(response.status).to.equal(201)
+    })
+})
 //
 //
 // -- This is a child command --

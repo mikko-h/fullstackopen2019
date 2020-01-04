@@ -28,7 +28,7 @@ const Nav = styled.nav`
 const Navigation = (props) => props.login === null ? null : (
   <Nav>
     <Link to="/">Blogs</Link>
-    <Link to="/users">Users</Link>
+    <Link data-cy="linkusers" to="/users">Users</Link>
     <span>{props.login.name} logged in</span>
     <button data-cy="logout" onClick={props.logoutUser}>Log out</button>
   </Nav>

@@ -26,7 +26,7 @@ const CommentForm = (props) => {
         label="Comment:"
         {...comment}
       />
-      <button type="submit">add comment</button>
+      <button data-cy="commentsubmit" type="submit">add comment</button>
     </form>
   )
 }

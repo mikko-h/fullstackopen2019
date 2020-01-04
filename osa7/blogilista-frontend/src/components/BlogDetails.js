@@ -34,9 +34,9 @@ const BlogDetails = (props) => {
     <div className='blog-details'>
       <h3>{blog.title} {blog.author}</h3>
       <p><a href={blog.url}>{blog.url}</a></p>
-      <div>{blog.likes} likes <button onClick={handleLikeClick}>like</button></div>
+      <div>{blog.likes} likes <button data-cy="like" onClick={handleLikeClick}>like</button></div>
       {blog.user && <div>added by {blog.user.name}</div>}
-      {removable && <button onClick={handleRemoveClick}>remove</button>}
+      {removable && <button data-cy="remove" onClick={handleRemoveClick}>remove</button>}
       <h4>comments</h4>
       <CommentForm blog={blog} />
       {blog.comments.length > 0 &&
