@@ -10,6 +10,7 @@
   "author": "Mikko Haaramo",
   "license": "UNLICENCED",
   "dependencies": {
-    "apollo-server": "^2.9.15"
+    "apollo-server": "^2.9.15",
+    "uuid": "^3.3.3"
   }
 }
