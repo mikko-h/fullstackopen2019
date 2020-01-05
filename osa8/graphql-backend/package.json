@@ -1,0 +1,15 @@
+{
+  "name": "graphql-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "library-backend.js",
+  "scripts": {
+    "start": "node library-backend.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mikko Haaramo",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "apollo-server": "^2.9.15"
+  }
+}
