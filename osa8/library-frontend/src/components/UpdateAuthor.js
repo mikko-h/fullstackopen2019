@@ -25,6 +25,7 @@ const UpdateAuthor = (props) => {
             value={name}
             onChange={({ target }) => setName(target.value)}
           >
+            <option value="">- select -</option>
             {props.allAuthors.map(author =>
               <option key={author.id} value={author.name}>{author.name}</option>
             )}
