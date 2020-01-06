@@ -1,6 +1,7 @@
 import React from 'react'
+import UpdateAuthor from './UpdateAuthor'
 
-const Authors = ({ authors, show }) => {
+const Authors = ({ authors, editAuthor, show }) => {
   if (!show || authors.loading) {
     return null
   }
@@ -28,7 +29,7 @@ const Authors = ({ authors, show }) => {
           )}
         </tbody>
       </table>
-
+      <UpdateAuthor editAuthor={editAuthor} />
     </div>
   )
 }
