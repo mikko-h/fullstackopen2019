@@ -21,10 +21,14 @@ const UpdateAuthor = (props) => {
         <h3>Set birthyear</h3>
         <div>
           name
-          <input
+          <select
             value={name}
             onChange={({ target }) => setName(target.value)}
-          />
+          >
+            {props.allAuthors.map(author =>
+              <option key={author.id} value={author.name}>{author.name}</option>
+            )}
+          </select>
         </div>
         <div>
           born

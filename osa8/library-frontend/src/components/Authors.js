@@ -29,7 +29,7 @@ const Authors = ({ authors, editAuthor, show }) => {
           )}
         </tbody>
       </table>
-      <UpdateAuthor editAuthor={editAuthor} />
+      <UpdateAuthor allAuthors={authors.data.allAuthors} editAuthor={editAuthor} />
     </div>
   )
 }
