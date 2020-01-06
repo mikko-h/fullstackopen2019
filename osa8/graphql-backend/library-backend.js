@@ -1,6 +1,25 @@
 const { ApolloServer, gql } = require('apollo-server')
 const uuid = require('uuid/v1')
+const mongoose = require('mongoose')
+const { MONGODB_URI } = require('./utils/config')
+const Author = require('./models/author')
+const Book = require('./models/book')
 
+console.log('connecting to', MONGODB_URI)
+mongoose.connect(MONGODB_URI, {
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
+
+/*
 let authors = [
   {
     name: 'Robert Martin',
@@ -26,13 +45,13 @@ let authors = [
     id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
 ]
-
+*/
 /*
  * It would be more sensible to assosiate book and the author by saving
  * the author id instead of the name to the book.
  * For simplicity we however save the author name.
 */
-
+/*
 let books = [
   {
     title: 'Clean Code',
@@ -84,19 +103,19 @@ let books = [
     genres: ['classic', 'revolution']
   },
 ]
-
+*/
 const typeDefs = gql`
   type Author {
     name: String!
     id: ID!
     born: Int
-    bookCount: Int!
+    # bookCount: Int!
   }
 
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -125,29 +144,30 @@ const typeDefs = gql`
 
 const resolvers = {
   Author: {
-    bookCount: (root) => books.filter(book => book.author === root.name).length
+    // bookCount: (root) => books.filter(book => book.author === root.name).length
   },
   Query: {
-    allAuthors: () => authors,
-    allBooks: (root, args) => books
-      .filter(book => args.author ? book.author === args.author : true)
-      .filter(book => args.genre ? book.genres.includes(args.genre) : true),
-    authorCount: () => authors.length,
-    bookCount: () => books.length,
+    allAuthors: () => Author.find({}),
+    allBooks: (root, args) => Book.find({}),
+      // .filter(book => args.author ? book.author === args.author : true)
+      // .filter(book => args.genre ? book.genres.includes(args.genre) : true),
+    authorCount: () => Author.collection.countDocuments,
+    bookCount: () => Book.collection.countDocuments,
     hello: () => { return "world" }
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
-      books = books.concat(book)
+    addBook: async (root, args) => {
+      const book = new Book({ ...args })
 
-      if (!authors.find(author => author.name === args.author)) {
-        const author = { name: args.author, id: uuid() }
-        authors = authors.concat(author)
+      const author = await Author.findOne({ name: args.name })
+      if (!author) {
+        const newAuthor = new Author({ name: args.author })
+        newAuthor.save()
       }
 
-      return book
+      return book.save()
     },
+    /*
     editAuthor: (root, args) => {
       const authorToEdit = authors.find(author => author.name === args.name)
       if (authorToEdit) {
@@ -157,6 +177,7 @@ const resolvers = {
       }
       return null
     }
+    */
   }
 }
 

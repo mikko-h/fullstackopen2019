@@ -10,7 +10,7 @@ const ALL_AUTHORS = gql`
     allAuthors {
       name
       born
-      bookCount
+      # bookCount
     }
   }
 `
@@ -19,7 +19,7 @@ const ALL_BOOKS = gql`
   query {
     allBooks {
       title
-      author
+      # author
       published
     }
   }
@@ -34,7 +34,7 @@ const CREATE_BOOK = gql`
       genres: $genres
     ) {
       title,
-      author,
+      # author,
       published,
       genres
     }
