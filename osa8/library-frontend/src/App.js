@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { gql } from 'apollo-boost'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery, useSubscription } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import Login from './components/Login'
@@ -18,17 +18,24 @@ const ALL_AUTHORS = gql`
   }
 `
 
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    author {
+      name
+    }
+    published
+    genres
+  }
+`
+
 const ALL_BOOKS = gql`
   query {
     allBooks {
-      title
-      author {
-        name
-      }
-      published
-      genres
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
 `
 
 const USERINFO = gql`
@@ -48,14 +55,10 @@ const CREATE_BOOK = gql`
       published: $published,
       genres: $genres
     ) {
-      title,
-      author {
-        name
-      },
-      published,
-      genres
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
 `
 
 const UPDATE_AUTHOR = gql`
@@ -73,6 +76,15 @@ const LOGIN = gql`
       value
     }
   }
+`
+
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
 `
 
 const App = () => {
@@ -96,6 +108,12 @@ const App = () => {
     setToken(null)
     localStorage.clear()
   }
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData: { data: { bookAdded: { title, author: { name }}}}}) => {
+      window.alert(`Added book ${title} by ${name}`)
+    }
+  })
 
   return (
     <div>
